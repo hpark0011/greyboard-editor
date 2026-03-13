@@ -1,0 +1,13 @@
+{
+  "name": "@greyboard/core",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./file-system": "./src/file-system.ts",
+    "./editor": "./src/editor.ts",
+    "./ipc": "./src/ipc.ts",
+    "./config": "./src/config.ts"
+  },
+  "files": ["src"]
+}

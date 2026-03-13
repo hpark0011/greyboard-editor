@@ -1,0 +1,15 @@
+{
+  "name": "@greyboard/shared",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./persistence": "./src/persistence/index.ts",
+    "./file-system": "./src/file-system/index.ts",
+    "./config": "./src/config/index.ts"
+  },
+  "dependencies": {
+    "@greyboard/core": "workspace:*"
+  },
+  "files": ["src"]
+}
