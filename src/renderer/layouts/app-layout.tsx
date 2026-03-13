@@ -38,8 +38,12 @@ export function AppLayout() {
     await openFile(path);
   };
 
-  const handleSetTree = (newTree: typeof tree) => {
-    useStore.setState({ tree: newTree });
+  const handleSetTree = (newTree: typeof tree | ((prev: typeof tree) => typeof tree)) => {
+    if (typeof newTree === "function") {
+      useStore.setState((state) => ({ tree: newTree(state.tree) }));
+    } else {
+      useStore.setState({ tree: newTree });
+    }
   };
 
   return (

@@ -64,10 +64,18 @@ export const createEditorSlice: StateCreator<EditorSlice> = (set, get) => ({
   saveFile: async (path: string) => {
     const doc = get().openDocuments.get(path);
     if (!doc) return;
-    await window.greyboard.writeFile(path, doc.content);
+    const savedContent = doc.content;
+    await window.greyboard.writeFile(path, savedContent);
     set((state) => {
       const docs = new Map(state.openDocuments);
-      docs.set(path, { ...doc, isDirty: false, lastSavedAt: Date.now() });
+      const current = docs.get(path);
+      if (!current) return state;
+      const stillClean = current.content === savedContent;
+      docs.set(path, {
+        ...current,
+        isDirty: stillClean ? false : current.isDirty,
+        lastSavedAt: Date.now(),
+      });
       return { openDocuments: docs };
     });
   },

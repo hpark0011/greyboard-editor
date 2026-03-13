@@ -20,20 +20,29 @@ export function debouncedWrite(
       const data = pending.get(filePath);
       if (data !== undefined) {
         pending.delete(filePath);
-        await atomicWrite(filePath, data);
+        try {
+          await atomicWrite(filePath, data);
+        } catch (error) {
+          console.error(`Debounced write failed for ${filePath}:`, error);
+        }
       }
     }, delay)
   );
 }
 
 export async function flushAll(): Promise<void> {
-  for (const [path, timer] of timers) {
+  const entries: [string, string][] = [];
+  for (const [filePath, timer] of timers) {
     clearTimeout(timer);
-    timers.delete(path);
-    const data = pending.get(path);
-    if (data !== undefined) {
-      pending.delete(path);
-      await atomicWrite(path, data);
-    }
+    const data = pending.get(filePath);
+    if (data !== undefined) entries.push([filePath, data]);
+  }
+  timers.clear();
+  pending.clear();
+  const results = await Promise.allSettled(
+    entries.map(([p, d]) => atomicWrite(p, d))
+  );
+  for (const r of results) {
+    if (r.status === "rejected") console.error("Flush failed:", r.reason);
   }
 }

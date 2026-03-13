@@ -10,7 +10,7 @@ interface FileTreeProps {
   onFileClick: (path: string) => void;
   onToggleFolder: (path: string) => void;
   onRefreshTree: () => void;
-  onSetTree: (tree: TreeNode[]) => void;
+  onSetTree: (tree: TreeNode[] | ((prev: TreeNode[]) => TreeNode[])) => void;
 }
 
 export function FileTree({
@@ -80,7 +80,7 @@ export function FileTree({
         return node;
       });
 
-    onSetTree(updateChildren(tree));
+    onSetTree((prevTree) => updateChildren(prevTree));
   };
 
   return (

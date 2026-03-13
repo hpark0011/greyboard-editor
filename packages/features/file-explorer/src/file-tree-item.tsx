@@ -84,34 +84,33 @@ export function FileTreeItem({
     <>
       <ContextMenu>
         <ContextMenuTrigger asChild>
-          <button
-            onClick={handleClick}
-            className={cn(
-              "flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-sm hover:bg-accent transition-colors text-left",
-              isSelected && "bg-accent text-accent-foreground"
-            )}
-            style={{ paddingLeft: `${depth * 12 + 4}px` }}
-          >
-            {isFolder ? (
-              <>
-                {node.expanded ? (
-                  <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                ) : (
-                  <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                )}
-                {node.expanded ? (
-                  <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
-                ) : (
-                  <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
-                )}
-              </>
-            ) : (
-              <>
-                <span className="w-3.5 shrink-0" />
-                <File className="h-4 w-4 shrink-0 text-muted-foreground" />
-              </>
-            )}
-            {isRenaming ? (
+          {isRenaming ? (
+            <div
+              className={cn(
+                "flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-sm",
+                isSelected && "bg-accent text-accent-foreground"
+              )}
+              style={{ paddingLeft: `${depth * 12 + 4}px` }}
+            >
+              {isFolder ? (
+                <>
+                  {node.expanded ? (
+                    <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  ) : (
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  )}
+                  {node.expanded ? (
+                    <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  ) : (
+                    <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  )}
+                </>
+              ) : (
+                <>
+                  <span className="w-3.5 shrink-0" />
+                  <File className="h-4 w-4 shrink-0 text-muted-foreground" />
+                </>
+              )}
               <Input
                 value={renameValue}
                 onChange={(e) => setRenameValue(e.target.value)}
@@ -122,12 +121,39 @@ export function FileTreeItem({
                 }}
                 className="h-5 text-xs px-1"
                 autoFocus
-                onClick={(e) => e.stopPropagation()}
               />
-            ) : (
+            </div>
+          ) : (
+            <button
+              onClick={handleClick}
+              className={cn(
+                "flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-sm hover:bg-accent transition-colors text-left",
+                isSelected && "bg-accent text-accent-foreground"
+              )}
+              style={{ paddingLeft: `${depth * 12 + 4}px` }}
+            >
+              {isFolder ? (
+                <>
+                  {node.expanded ? (
+                    <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  ) : (
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  )}
+                  {node.expanded ? (
+                    <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  ) : (
+                    <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  )}
+                </>
+              ) : (
+                <>
+                  <span className="w-3.5 shrink-0" />
+                  <File className="h-4 w-4 shrink-0 text-muted-foreground" />
+                </>
+              )}
               <span className="truncate">{node.name}</span>
-            )}
-          </button>
+            </button>
+          )}
         </ContextMenuTrigger>
         <ContextMenuContent>
           {isFolder && (

@@ -13,8 +13,9 @@ export async function readJsonl<T>(filePath: string): Promise<T[]> {
       }
     }
     return results;
-  } catch {
-    return [];
+  } catch (error: unknown) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
+    throw error;
   }
 }
 

@@ -23,6 +23,23 @@ function toggleFolderInTree(nodes: TreeNode[], folderPath: string): TreeNode[] {
   });
 }
 
+function mergeExpandedState(newTree: TreeNode[], oldTree: TreeNode[]): TreeNode[] {
+  const oldMap = new Map<string, TreeNode>();
+  for (const node of oldTree) oldMap.set(node.path, node);
+
+  return newTree.map((node) => {
+    const old = oldMap.get(node.path);
+    if (node.type === "folder" && old?.type === "folder") {
+      return {
+        ...node,
+        expanded: old.expanded,
+        children: mergeExpandedState(node.children, old.children),
+      };
+    }
+    return node;
+  });
+}
+
 async function buildTree(dirPath: string): Promise<TreeNode[]> {
   const entries = await window.greyboard.readDir(dirPath);
   const nodes: TreeNode[] = [];
@@ -75,8 +92,9 @@ export const createFileExplorerSlice: StateCreator<FileExplorerSlice> = (
   refreshTree: async () => {
     const root = get().workspaceRoot;
     if (!root) return;
-    const tree = await buildTree(root);
-    set({ tree });
+    const oldTree = get().tree;
+    const newTree = await buildTree(root);
+    set({ tree: mergeExpandedState(newTree, oldTree) });
   },
 
   setSelectedFile: (path) => set({ selectedFilePath: path }),

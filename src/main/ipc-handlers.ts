@@ -2,13 +2,16 @@ import { ipcMain, dialog, BrowserWindow } from "electron";
 import { IpcChannel } from "@greyboard/core/ipc";
 import fs from "fs/promises";
 import path from "path";
+import { randomUUID } from "crypto";
 
 let workspaceRoot: string | null = null;
+let activeWatchAbort: AbortController | null = null;
 
 function validatePath(filePath: string): string {
   if (!workspaceRoot) throw new Error("No workspace open");
   const resolved = path.resolve(filePath);
-  if (!resolved.startsWith(workspaceRoot)) {
+  const relative = path.relative(workspaceRoot, resolved);
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
     throw new Error("Path outside workspace");
   }
   return resolved;
@@ -49,7 +52,10 @@ export function registerIpcHandlers() {
     IpcChannel.WriteFile,
     async (_event, filePath: string, content: string) => {
       const resolved = validatePath(filePath);
-      const tmpPath = resolved + ".tmp";
+      const tmpPath = path.join(
+        path.dirname(resolved),
+        `.${path.basename(resolved)}.${randomUUID()}.tmp`
+      );
       await fs.writeFile(tmpPath, content, "utf-8");
       await fs.rename(tmpPath, resolved);
     }
@@ -90,7 +96,11 @@ export function registerIpcHandlers() {
     IpcChannel.WatchFolder,
     async (_event, folderPath: string) => {
       const resolved = validatePath(folderPath);
-      const watcher = fs.watch(resolved, { recursive: true });
+      if (activeWatchAbort) {
+        activeWatchAbort.abort();
+      }
+      activeWatchAbort = new AbortController();
+      const watcher = fs.watch(resolved, { recursive: true, signal: activeWatchAbort.signal });
       let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
       (async () => {
