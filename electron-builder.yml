@@ -1,0 +1,23 @@
+appId: com.greyboard.app
+productName: Greyboard
+directories:
+  output: release
+  buildResources: resources
+files:
+  - dist/**/*
+  - "!node_modules/**/*"
+mac:
+  category: public.app-category.productivity
+  target:
+    - dmg
+    - zip
+  icon: resources/icon.icns
+  darkModeSupport: true
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
