@@ -14,7 +14,10 @@
     "build:renderer": "cd src/renderer && vite build",
     "build": "bun run build:main && bun run build:preload && bun run build:renderer",
     "start": "electron dist/main/index.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:smoke": "bun scripts/smoke-test.ts",
+    "dev:clean": "lsof -ti :5173 | xargs kill -9 2>/dev/null; pkill -f electronmon 2>/dev/null; echo 'Cleaned'",
+    "dev:safe": "bun run dev:clean && bun run dev"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",

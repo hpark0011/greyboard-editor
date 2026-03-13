@@ -10,3 +10,22 @@ export enum IpcChannel {
   WatchFolder = "greyboard:watch-folder",
   FileChanged = "greyboard:file-changed",
 }
+
+export interface DirectoryEntry {
+  name: string;
+  path: string;
+  isDirectory: boolean;
+}
+
+export interface GreyboardApi {
+  selectFolder: () => Promise<string | null>;
+  readDir: (dirPath: string) => Promise<DirectoryEntry[]>;
+  readFile: (filePath: string) => Promise<string>;
+  writeFile: (filePath: string, content: string) => Promise<void>;
+  deleteFile: (filePath: string) => Promise<void>;
+  createFile: (filePath: string, content?: string) => Promise<void>;
+  createFolder: (folderPath: string) => Promise<void>;
+  renameFile: (oldPath: string, newPath: string) => Promise<void>;
+  watchFolder: (folderPath: string) => Promise<boolean>;
+  onFileChange: (callback: () => void) => () => void;
+}
