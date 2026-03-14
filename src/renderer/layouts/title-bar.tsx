@@ -1,7 +1,8 @@
+import { Icon } from "@greyboard/ui/components/icon";
 import { IconButton } from "@greyboard/ui/components/icon-button";
-import { PanelRightClose } from "lucide-react";
 import { useStore } from "../store";
 import { SidebarTrigger } from "./sidebar-trigger";
+import { Button } from "@greyboard/ui/primitives/button";
 
 function workspaceName(rootPath: string): string {
   return rootPath.split(/[/\\]/).pop() || rootPath;
@@ -40,13 +41,9 @@ export function TitleBar() {
         {workspaceRoot ? workspaceName(workspaceRoot) : "Greyboard"}
       </span>
       <div className="flex items-center gap-2">
-        <IconButton
-          tooltip={rightSidebarVisible ? "Hide AI panel" : "Show AI panel"}
-          onClick={toggleRightSidebar}
-          size="sm"
-        >
-          <PanelRightClose className="h-4 w-4" />
-        </IconButton>
+        <Button size="xs" variant="ghost" onClick={toggleRightSidebar}>
+          Chat
+        </Button>
       </div>
     </div>
   );

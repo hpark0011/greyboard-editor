@@ -68,7 +68,7 @@ export function AppLayout() {
                   id="left-sidebar"
                 >
                   <div className="flex h-full flex-col">
-                    <div className="flex items-center justify-between border-b px-3 py-1.5">
+                    <div className="flex items-center justify-between px-3 py-1.5">
                       <span className="text-xs font-semibold uppercase text-muted-foreground">
                         Explorer
                       </span>
