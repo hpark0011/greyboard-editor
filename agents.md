@@ -28,6 +28,23 @@ Three-process Electron app with Bun bundler and Vite for the renderer:
 5. **Vite port 5173 hardcoded**: `dev:electron` uses `wait-on http://localhost:5173`. If Vite picks another port (because 5173 is occupied by a zombie), Electron hangs. Use `bun run dev:safe` to clean up first.
 6. **tsconfig `moduleResolution: "bundler"`**: Required for Vite + workspace imports. Don't change to `node` or `nodenext`.
 
+## Zustand Conventions
+
+The renderer uses Zustand (v5) with the **slice pattern** (`src/renderer/store/`). Follow these rules when touching store code:
+
+1. **Always use selectors** — never call `useStore()` bare. Use `useShallow` from `zustand/react/shallow` to pick only the fields the component needs. Bare `useStore()` subscribes to the entire store and causes unnecessary re-renders.
+   ```ts
+   // WRONG
+   const { theme, setTheme } = useStore();
+   // RIGHT
+   const { theme, setTheme } = useStore(useShallow((s) => ({ theme: s.theme, setTheme: s.setTheme })));
+   ```
+2. **Use plain objects (`Record<string, T>`) for collections, not `Map`** — Zustand's `===` equality check always sees a new reference after `new Map()` copy, defeating selective re-rendering. Maps also don't JSON-serialize (breaks `persist` middleware and devtools).
+3. **Mutate state through store actions only** — never call `useStore.setState()` from a component. Add an action to the relevant slice instead. This keeps state mutations traceable and centralized.
+4. **Clean up side-effect subscriptions** — if an action registers a listener (e.g., `onFileChange`), store the cleanup function and call it before registering a new one. Otherwise repeated calls leak listeners.
+5. **Wrap async IPC calls in try/catch** — all `window.greyboard.*` calls can fail (missing file, permission error, disconnected IPC). Catch errors and surface them via the store's `error` state rather than letting unhandled rejections propagate.
+6. **Keep persistence co-located** — if state is read from `localStorage`/`persist`, the write should happen in the same file (or via `persist` middleware), not split across a hook and a slice.
+
 ## Efficiency Rules
 
 - **Don't spawn Agent for bugs involving <5 files** — read them directly with Read/Grep. Agent sub-calls have high overhead and are only worth it for broad exploration.
