@@ -1,7 +1,9 @@
 import * as React from "react";
+import { BubbleLeftFillIcon } from "@feel-good/icons";
 import { cn } from "../lib/utils";
 
 const icons: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+  BubbleLeftFillIcon,
   CheckmarkSmallIcon: (props) => (
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M3.5 8.5L6.5 11.5L12.5 5" />

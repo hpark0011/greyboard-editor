@@ -7,21 +7,15 @@ import {
 import { TooltipProvider } from "@greyboard/ui/primitives/tooltip";
 import { FileTree, FolderPicker } from "@greyboard/file-explorer";
 import { MarkdownEditor } from "@greyboard/editor";
-import {
-  FolderOpen,
-  MessageSquare,
-  PanelLeftClose,
-  PanelRightClose,
-} from "lucide-react";
+import { FolderOpen, MessageSquare } from "lucide-react";
 import { IconButton } from "@greyboard/ui/components/icon-button";
 import { Button } from "@greyboard/ui/primitives/button";
+import { TitleBar } from "./title-bar";
 
 export function AppLayout() {
   const {
     leftSidebarVisible,
     rightSidebarVisible,
-    toggleLeftSidebar,
-    toggleRightSidebar,
     workspaceRoot,
     tree,
     selectedFilePath,
@@ -56,30 +50,7 @@ export function AppLayout() {
   return (
     <TooltipProvider delayDuration={300}>
       <div className="flex h-screen flex-col bg-background text-foreground">
-        {/* Title bar area */}
-        <div className="flex h-10 items-center justify-between border-b px-3 app-drag-region">
-          <div className="flex items-center gap-2">
-            <IconButton
-              tooltip={leftSidebarVisible ? "Hide sidebar" : "Show sidebar"}
-              onClick={toggleLeftSidebar}
-              size="sm"
-            >
-              <PanelLeftClose className="h-4 w-4" />
-            </IconButton>
-            <span className="text-sm font-medium">
-              {workspaceRoot ? workspaceRoot.split("/").pop() : "Greyboard"}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <IconButton
-              tooltip={rightSidebarVisible ? "Hide AI panel" : "Show AI panel"}
-              onClick={toggleRightSidebar}
-              size="sm"
-            >
-              <PanelRightClose className="h-4 w-4" />
-            </IconButton>
-          </div>
-        </div>
+        <TitleBar />
 
         {/* Main content */}
         <div className="flex-1 overflow-hidden">
@@ -97,7 +68,7 @@ export function AppLayout() {
                   id="left-sidebar"
                 >
                   <div className="flex h-full flex-col">
-                    <div className="flex items-center justify-between border-b px-3 py-1.5">
+                    <div className="flex items-center justify-between px-3 py-1.5">
                       <span className="text-xs font-semibold uppercase text-muted-foreground">
                         Explorer
                       </span>

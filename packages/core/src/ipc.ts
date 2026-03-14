@@ -18,6 +18,7 @@ export interface DirectoryEntry {
 }
 
 export interface GreyboardApi {
+  platform: NodeJS.Platform;
   selectFolder: () => Promise<string | null>;
   readDir: (dirPath: string) => Promise<DirectoryEntry[]>;
   readFile: (filePath: string) => Promise<string>;

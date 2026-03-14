@@ -6,6 +6,8 @@ import {
 } from "@greyboard/core/ipc";
 
 export const api = {
+  platform: process.platform,
+
   selectFolder: (): Promise<string | null> =>
     ipcRenderer.invoke(IpcChannel.SelectFolder),
 
