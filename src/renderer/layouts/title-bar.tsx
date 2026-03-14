@@ -42,7 +42,7 @@ export function TitleBar() {
       <span className="text-[13px] font-medium">
         {workspaceRoot ? workspaceName(workspaceRoot) : "Greyboard"}
       </span>
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center">
         <ThemeToggle theme={theme} onThemeChange={setTheme} />
         <Button size="xs" variant="ghost" onClick={toggleRightSidebar}>
           Chat

@@ -9,12 +9,6 @@ const nextTheme: Record<Theme, Theme> = {
   system: "light",
 };
 
-const tooltipLabel: Record<Theme, string> = {
-  light: "Switch to dark mode",
-  dark: "Switch to system mode",
-  system: "Switch to light mode",
-};
-
 const icons: Record<Theme, React.ReactNode> = {
   light: <Sun className="h-3.5 w-3.5 " />,
   dark: <Moon className="h-3.5 w-3.5 " />,
@@ -29,7 +23,6 @@ interface ThemeToggleProps {
 export function ThemeToggle({ theme, onThemeChange }: ThemeToggleProps) {
   return (
     <IconButton
-      tooltip={tooltipLabel[theme]}
       onClick={() => onThemeChange(nextTheme[theme])}
       size="icon-xs"
     >
