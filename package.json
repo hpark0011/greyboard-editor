@@ -54,6 +54,7 @@
     "tailwindcss": "^4.2.1",
     "tiptap-markdown": "^0.9.0",
     "vite": "^8.0.0",
+    "@feel-good/icons": "workspace:*",
     "zustand": "^5.0.11"
   }
 }
