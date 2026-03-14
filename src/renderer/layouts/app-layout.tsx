@@ -1,4 +1,5 @@
 import { useStore } from "../store";
+import { useThemeEffect } from "../hooks/use-theme-effect";
 import {
   ResizableHandle,
   ResizableLayout,
@@ -13,6 +14,8 @@ import { Button } from "@greyboard/ui/primitives/button";
 import { TitleBar } from "./title-bar";
 
 export function AppLayout() {
+  useThemeEffect();
+
   const {
     leftSidebarVisible,
     rightSidebarVisible,
@@ -75,7 +78,7 @@ export function AppLayout() {
                       <IconButton
                         tooltip="Open Folder"
                         onClick={openFolder}
-                        size="sm"
+                        size="icon-xs"
                       >
                         <FolderOpen className="h-3.5 w-3.5" />
                       </IconButton>

@@ -1,8 +1,8 @@
-import { Icon } from "@greyboard/ui/components/icon";
 import { IconButton } from "@greyboard/ui/components/icon-button";
+import { ThemeToggle } from "@greyboard/ui/components/theme-toggle";
+import { Button } from "@greyboard/ui/primitives/button";
 import { useStore } from "../store";
 import { SidebarTrigger } from "./sidebar-trigger";
-import { Button } from "@greyboard/ui/primitives/button";
 
 function workspaceName(rootPath: string): string {
   return rootPath.split(/[/\\]/).pop() || rootPath;
@@ -15,6 +15,8 @@ export function TitleBar() {
     toggleLeftSidebar,
     toggleRightSidebar,
     workspaceRoot,
+    theme,
+    setTheme,
   } = useStore();
 
   const platform = window.greyboard?.platform;
@@ -31,7 +33,7 @@ export function TitleBar() {
         <IconButton
           tooltip={leftSidebarVisible ? "Hide sidebar" : "Show sidebar"}
           onClick={toggleLeftSidebar}
-          size="sm"
+          size="icon-xs"
           className=" items-center justify-center flex flex-col"
         >
           <SidebarTrigger />
@@ -40,7 +42,8 @@ export function TitleBar() {
       <span className="text-[13px] font-medium">
         {workspaceRoot ? workspaceName(workspaceRoot) : "Greyboard"}
       </span>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center">
+        <ThemeToggle theme={theme} onThemeChange={setTheme} />
         <Button size="xs" variant="ghost" onClick={toggleRightSidebar}>
           Chat
         </Button>
