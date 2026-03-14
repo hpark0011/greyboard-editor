@@ -12,7 +12,7 @@
 
 ## **Memory and Logging**
 
-- **Plan store** – generated plans and acceptance criteria should be persisted for each session (e.g., plan\_<sessionID>.md). Storing the plan allows the plan verifier and meta‑optimizer to revisit what was intended.
+- **Plan store** – generated plans and acceptance criteria should be persisted for each session (e.g., plans\_<sessionID>.md). Storing the plan allows the plan verifier and meta‑optimizer to revisit what was intended.
 - **Session log store** – capture the full sequence of agent calls, tool invocations, budgets, and outcomes during a session. Save these logs under a consistent naming convention (e.g., session\_<sessionID>.log) to enable debugging and retro analysis.
 - **Retro and learning store** – after each session, summarise what worked, what failed, and how prompts or policies were updated. Save these learnings to a central knowledge base (e.g., retro\_<sessionID>.md) for the meta‑optimizer to adjust future runs.
 
