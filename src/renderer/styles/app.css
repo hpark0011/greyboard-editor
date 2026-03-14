@@ -1,7 +1,8 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @plugin "@tailwindcss/typography";
-@source "../../packages/ui/src/**/*.{ts,tsx}";
-@source "../../packages/features/*/src/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+@source "../../../packages/features/*/src/**/*.{ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 
