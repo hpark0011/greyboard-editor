@@ -1,17 +1,16 @@
-import { useStore } from "../store";
-import { useThemeEffect } from "../hooks/use-theme-effect";
+import { useStore } from "../../store";
+import { useThemeEffect } from "../../hooks/use-theme-effect";
 import {
   ResizableHandle,
   ResizableLayout,
   ResizablePanel,
 } from "@greyboard/ui/components/resizable-layout";
 import { TooltipProvider } from "@greyboard/ui/primitives/tooltip";
-import { FileTree, FolderPicker } from "@greyboard/file-explorer";
 import { MarkdownEditor } from "@greyboard/editor";
-import { FolderOpen, MessageSquare } from "lucide-react";
-import { IconButton } from "@greyboard/ui/components/icon-button";
-import { Button } from "@greyboard/ui/primitives/button";
+import { MessageSquare } from "lucide-react";
 import { TitleBar } from "./title-bar";
+import { ExplorerPanel } from "./explorer-panel";
+import { EmptyState } from "../empty-state";
 
 export function AppLayout() {
   useThemeEffect();
@@ -20,35 +19,14 @@ export function AppLayout() {
     leftSidebarVisible,
     rightSidebarVisible,
     workspaceRoot,
-    tree,
-    selectedFilePath,
     openFolder,
-    refreshTree,
-    toggleFolder,
-    setSelectedFile,
     openDocuments,
     activeDocPath,
-    openFile,
     updateContent,
     saveFile,
   } = useStore();
 
   const activeDoc = activeDocPath ? openDocuments.get(activeDocPath) : null;
-
-  const handleFileClick = async (path: string) => {
-    setSelectedFile(path);
-    await openFile(path);
-  };
-
-  const handleSetTree = (
-    newTree: typeof tree | ((prev: typeof tree) => typeof tree),
-  ) => {
-    if (typeof newTree === "function") {
-      useStore.setState((state) => ({ tree: newTree(state.tree) }));
-    } else {
-      useStore.setState({ tree: newTree });
-    }
-  };
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -70,33 +48,7 @@ export function AppLayout() {
                   order={1}
                   id="left-sidebar"
                 >
-                  <div className="flex h-full flex-col">
-                    <div className="flex items-center justify-between px-3 py-1.5">
-                      <span className="text-xs font-semibold uppercase text-muted-foreground">
-                        Explorer
-                      </span>
-                      <IconButton
-                        tooltip="Open Folder"
-                        onClick={openFolder}
-                        size="icon-xs"
-                      >
-                        <FolderOpen className="h-3.5 w-3.5" />
-                      </IconButton>
-                    </div>
-                    {workspaceRoot
-                      ? (
-                        <FileTree
-                          tree={tree}
-                          selectedPath={selectedFilePath}
-                          workspaceRoot={workspaceRoot}
-                          onFileClick={handleFileClick}
-                          onToggleFolder={toggleFolder}
-                          onRefreshTree={refreshTree}
-                          onSetTree={handleSetTree}
-                        />
-                      )
-                      : <FolderPicker onOpenFolder={openFolder} />}
-                  </div>
+                  <ExplorerPanel />
                 </ResizablePanel>
                 <ResizableHandle />
               </>
@@ -116,19 +68,7 @@ export function AppLayout() {
                   />
                 )
                 : (
-                  <div className="flex h-full flex-col items-center justify-center gap-4 text-muted-foreground">
-                    <p className="text-sm">
-                      {workspaceRoot
-                        ? "Select a file to start editing"
-                        : "Open a folder to get started"}
-                    </p>
-                    {!workspaceRoot && (
-                      <Button variant="outline" size="sm" onClick={openFolder}>
-                        <FolderOpen className="mr-2 h-4 w-4" />
-                        Open Folder
-                      </Button>
-                    )}
-                  </div>
+                  <EmptyState workspaceRoot={workspaceRoot} openFolder={openFolder} />
                 )}
             </ResizablePanel>
 

@@ -1,4 +1,5 @@
-import { Monitor, Moon, Sun } from "lucide-react";
+import { Monitor } from "lucide-react";
+import { Icon } from "./icon";
 import { IconButton } from "./icon-button";
 
 type Theme = "light" | "dark" | "system";
@@ -10,9 +11,9 @@ const nextTheme: Record<Theme, Theme> = {
 };
 
 const icons: Record<Theme, React.ReactNode> = {
-  light: <Sun className="h-3.5 w-3.5 " />,
-  dark: <Moon className="h-3.5 w-3.5 " />,
-  system: <Monitor className="h-3.5 w-3.5 " />,
+  light: <Icon name="SunMaxFillIcon" className="size-4.5" />,
+  dark: <Icon name="MoonFillIcon" className="size-4" />,
+  system: <Monitor className="size-3.5" />,
 };
 
 interface ThemeToggleProps {

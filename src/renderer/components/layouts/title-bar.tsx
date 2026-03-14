@@ -1,7 +1,7 @@
 import { IconButton } from "@greyboard/ui/components/icon-button";
 import { ThemeToggle } from "@greyboard/ui/components/theme-toggle";
 import { Button } from "@greyboard/ui/primitives/button";
-import { useStore } from "../store";
+import { useStore } from "../../store";
 import { SidebarTrigger } from "./sidebar-trigger";
 
 function workspaceName(rootPath: string): string {
