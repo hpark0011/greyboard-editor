@@ -1,32 +1,9 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "@radix-ui/colors/gray.css";
-@import "@radix-ui/colors/gray-dark.css";
-@import "@feel-good/ui/styles.css";
-@import "@feel-good/features/editor/styles/tiptap-content.css";
+@import "../packages/ui/src/styles/globals.css";
 
-@plugin "@tailwindcss/typography";
-
-@source "../node_modules/@feel-good/ui";
-@source "../node_modules/@feel-good/features";
+@source "../node_modules/@greyboard/ui";
+@source "../node_modules/@greyboard/editor";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -44,18 +21,12 @@
 }
 
 @layer utilities {
-  .drag {
+  .titlebar-drag {
     -webkit-app-region: drag;
-  }
-  .no-drag {
-    -webkit-app-region: no-drag;
-  }
-}
+    -webkit-user-select: none;
 
-[data-platform="darwin"] .titlebar-padded {
-  padding-left: 80px;
-}
-
-[data-platform="win32"] .titlebar-padded {
-  padding-right: 140px;
+    button, a {
+      -webkit-app-region: no-drag;
+    }
+  }
 }
