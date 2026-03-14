@@ -78,7 +78,7 @@ export function AppLayout() {
                       <IconButton
                         tooltip="Open Folder"
                         onClick={openFolder}
-                        size="sm"
+                        size="icon-xs"
                       >
                         <FolderOpen className="h-3.5 w-3.5" />
                       </IconButton>

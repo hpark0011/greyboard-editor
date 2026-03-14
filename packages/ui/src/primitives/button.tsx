@@ -53,7 +53,8 @@ const buttonVariants = cva(
           "h-10 rounded-[11px] px-6 has-[>svg]:px-4 [corner-shape:superellipse(1.2)]",
         // Icon button sizes
         icon: "size-8 rounded-[9px]",
-        "icon-xs": "size-6 rounded-[7px] [&_svg:not([class*='size-'])]:size-3",
+        "icon-xs":
+          "size-6 rounded-[7px] [&_svg:not([class*='size-'])]:size-3.5",
         "icon-sm": "size-7 rounded-lg",
         "icon-lg": "size-9 rounded-[10px]",
       },
@@ -90,9 +91,11 @@ function Button({
   );
 }
 
-type ButtonProps = React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
+type ButtonProps =
+  & React.ComponentProps<"button">
+  & VariantProps<typeof buttonVariants>
+  & {
     asChild?: boolean;
   };
 
-export { Button, buttonVariants, type ButtonProps };
+export { Button, type ButtonProps, buttonVariants };

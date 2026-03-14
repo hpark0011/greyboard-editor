@@ -45,7 +45,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           tooltip="Undo"
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().undo()}
-          size="sm"
+          size="icon-xs"
         >
           <Undo className="h-4 w-4" />
         </IconButton>
@@ -53,7 +53,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           tooltip="Redo"
           onClick={() => editor.chain().focus().redo().run()}
           disabled={!editor.can().redo()}
-          size="sm"
+          size="icon-xs"
         >
           <Redo className="h-4 w-4" />
         </IconButton>
@@ -64,7 +64,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           tooltip="Bold"
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={cn(editor.isActive("bold") && "bg-accent")}
-          size="sm"
+          size="icon-xs"
         >
           <Bold className="h-4 w-4" />
         </IconButton>
@@ -72,11 +72,11 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           tooltip="Italic"
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={cn(editor.isActive("italic") && "bg-accent")}
-          size="sm"
+          size="icon-xs"
         >
           <Italic className="h-4 w-4" />
         </IconButton>
-        <IconButton tooltip="Link" onClick={addLink} size="sm">
+        <IconButton tooltip="Link" onClick={addLink} size="icon-xs">
           <Link className="h-4 w-4" />
         </IconButton>
 
@@ -90,7 +90,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           className={cn(
             editor.isActive("heading", { level: 1 }) && "bg-accent"
           )}
-          size="sm"
+          size="icon-xs"
         >
           <Heading1 className="h-4 w-4" />
         </IconButton>
@@ -102,7 +102,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           className={cn(
             editor.isActive("heading", { level: 2 }) && "bg-accent"
           )}
-          size="sm"
+          size="icon-xs"
         >
           <Heading2 className="h-4 w-4" />
         </IconButton>
@@ -114,7 +114,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           className={cn(
             editor.isActive("heading", { level: 3 }) && "bg-accent"
           )}
-          size="sm"
+          size="icon-xs"
         >
           <Heading3 className="h-4 w-4" />
         </IconButton>
@@ -125,7 +125,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           tooltip="Bullet List"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={cn(editor.isActive("bulletList") && "bg-accent")}
-          size="sm"
+          size="icon-xs"
         >
           <List className="h-4 w-4" />
         </IconButton>
@@ -133,7 +133,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           tooltip="Ordered List"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={cn(editor.isActive("orderedList") && "bg-accent")}
-          size="sm"
+          size="icon-xs"
         >
           <ListOrdered className="h-4 w-4" />
         </IconButton>
@@ -141,7 +141,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           tooltip="Code"
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           className={cn(editor.isActive("codeBlock") && "bg-accent")}
-          size="sm"
+          size="icon-xs"
         >
           <Code className="h-4 w-4" />
         </IconButton>
@@ -149,14 +149,14 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           tooltip="Blockquote"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={cn(editor.isActive("blockquote") && "bg-accent")}
-          size="sm"
+          size="icon-xs"
         >
           <Quote className="h-4 w-4" />
         </IconButton>
 
         <Separator orientation="vertical" className="mx-1 h-5" />
 
-        <IconButton tooltip="Image" onClick={addImage} size="sm">
+        <IconButton tooltip="Image" onClick={addImage} size="icon-xs">
           <ImageIcon className="h-4 w-4" />
         </IconButton>
       </div>
