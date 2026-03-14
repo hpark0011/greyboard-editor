@@ -15,7 +15,9 @@ export const createUiSlice: StateCreator<UiSlice> = (set) => ({
   leftSidebarVisible: true,
   rightSidebarVisible: true,
   panelSizes: [20, 60, 20],
-  theme: "system",
+  theme: (typeof localStorage !== "undefined"
+    ? (localStorage.getItem("greyboard-theme") as "light" | "dark" | "system")
+    : null) || "system",
   toggleLeftSidebar: () =>
     set((state) => ({ leftSidebarVisible: !state.leftSidebarVisible })),
   toggleRightSidebar: () =>

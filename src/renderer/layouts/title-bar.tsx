@@ -3,6 +3,7 @@ import { IconButton } from "@greyboard/ui/components/icon-button";
 import { useStore } from "../store";
 import { SidebarTrigger } from "./sidebar-trigger";
 import { Button } from "@greyboard/ui/primitives/button";
+import { Sun, Moon, Monitor } from "lucide-react";
 
 function workspaceName(rootPath: string): string {
   return rootPath.split(/[/\\]/).pop() || rootPath;
@@ -15,6 +16,8 @@ export function TitleBar() {
     toggleLeftSidebar,
     toggleRightSidebar,
     workspaceRoot,
+    theme,
+    setTheme,
   } = useStore();
 
   const platform = window.greyboard?.platform;
@@ -41,6 +44,25 @@ export function TitleBar() {
         {workspaceRoot ? workspaceName(workspaceRoot) : "Greyboard"}
       </span>
       <div className="flex items-center gap-2">
+        <IconButton
+          tooltip={
+            theme === "light"
+              ? "Switch to dark mode"
+              : theme === "dark"
+                ? "Switch to system mode"
+                : "Switch to light mode"
+          }
+          onClick={() =>
+            setTheme(
+              theme === "light" ? "dark" : theme === "dark" ? "system" : "light",
+            )
+          }
+          size="sm"
+        >
+          {theme === "light" && <Sun className="h-3.5 w-3.5" />}
+          {theme === "dark" && <Moon className="h-3.5 w-3.5" />}
+          {theme === "system" && <Monitor className="h-3.5 w-3.5" />}
+        </IconButton>
         <Button size="xs" variant="ghost" onClick={toggleRightSidebar}>
           Chat
         </Button>

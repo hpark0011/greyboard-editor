@@ -1,4 +1,5 @@
 import { useStore } from "../store";
+import { useThemeEffect } from "../hooks/use-theme-effect";
 import {
   ResizableHandle,
   ResizableLayout,
@@ -13,6 +14,8 @@ import { Button } from "@greyboard/ui/primitives/button";
 import { TitleBar } from "./title-bar";
 
 export function AppLayout() {
+  useThemeEffect();
+
   const {
     leftSidebarVisible,
     rightSidebarVisible,
