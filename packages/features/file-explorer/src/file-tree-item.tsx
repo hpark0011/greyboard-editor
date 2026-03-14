@@ -87,7 +87,16 @@ export function FileTreeItem({
           {isRenaming ? (
             <div
               className={cn(
-                "flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-sm",
+                // Layout & alignment
+                "flex items-center gap-1",
+                // Sizing
+                "w-full",
+                // Shape
+                "rounded-sm",
+                // Spacing
+                "px-1 py-0.5",
+                // Typography
+                "text-sm",
                 isSelected && "bg-accent text-accent-foreground"
               )}
               style={{ paddingLeft: `${depth * 12 + 4}px` }}
@@ -127,7 +136,18 @@ export function FileTreeItem({
             <button
               onClick={handleClick}
               className={cn(
-                "flex w-full items-center gap-1 rounded-sm px-1 py-0.5 text-sm hover:bg-accent transition-colors text-left",
+                // Layout & alignment
+                "flex items-center gap-1 text-left",
+                // Sizing
+                "w-full",
+                // Shape
+                "rounded-sm",
+                // Spacing
+                "px-1 py-0.5",
+                // Typography
+                "text-sm",
+                // Interactive states
+                "hover:bg-accent transition-colors",
                 isSelected && "bg-accent text-accent-foreground"
               )}
               style={{ paddingLeft: `${depth * 12 + 4}px` }}

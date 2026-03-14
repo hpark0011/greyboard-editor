@@ -8,7 +8,18 @@ interface EmptyStateProps {
 
 export function EmptyState({ workspaceRoot, openFolder }: EmptyStateProps) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4 text-muted-foreground">
+    <div
+      className={[
+        // Layout & alignment
+        "flex flex-col items-center justify-center",
+        // Sizing
+        "h-full",
+        // Spacing
+        "gap-4",
+        // Typography
+        "text-muted-foreground",
+      ].join(" ")}
+    >
       <p className="text-sm">
         {workspaceRoot
           ? "Select a file to start editing"

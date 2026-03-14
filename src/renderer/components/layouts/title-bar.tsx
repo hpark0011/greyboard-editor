@@ -36,9 +36,21 @@ export function TitleBar() {
 
   return (
     <div
-      className={`flex h-9 items-center justify-between border-b px-3 titlebar-drag ${
-        isMac ? "pl-[72px]" : ""
-      } ${isWindows ? "pr-[140px]" : ""}`}
+      className={[
+        // Layout & alignment
+        "flex items-center justify-between",
+        // Sizing
+        "h-9",
+        // Shape
+        "border-b",
+        // Spacing
+        "px-3",
+        // Drag region
+        "titlebar-drag",
+        // Platform-specific positioning
+        isMac ? "pl-[72px]" : "",
+        isWindows ? "pr-[140px]" : "",
+      ].filter(Boolean).join(" ")}
     >
       <div className="flex items-center gap-2 relative">
         <IconButton

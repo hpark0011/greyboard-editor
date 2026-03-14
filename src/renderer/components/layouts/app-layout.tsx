@@ -42,7 +42,18 @@ export function AppLayout() {
 
   return (
     <TooltipProvider delayDuration={300}>
-      <div className="flex h-screen flex-col bg-background text-foreground">
+      <div
+        className={[
+          // Layout
+          "flex flex-col",
+          // Sizing
+          "h-screen",
+          // Background
+          "bg-background",
+          // Typography
+          "text-foreground",
+        ].join(" ")}
+      >
         <TitleBar />
 
         {/* Main content */}
@@ -104,7 +115,16 @@ export function AppLayout() {
                         AI Assistant
                       </span>
                     </div>
-                    <div className="flex flex-1 items-center justify-center p-4 text-sm text-muted-foreground">
+                    <div
+                      className={[
+                        // Layout & alignment
+                        "flex flex-1 items-center justify-center",
+                        // Spacing
+                        "p-4",
+                        // Typography
+                        "text-sm text-muted-foreground",
+                      ].join(" ")}
+                    >
                       AI Assistant coming soon
                     </div>
                   </div>

@@ -78,7 +78,18 @@ function ResizableHandle({ className }: { className?: string }) {
   return (
     <PanelResizeHandle
       className={cn(
-        "relative flex w-px items-center justify-center bg-border after:absolute after:inset-y-0 after:-left-1 after:-right-1 after:content-[''] hover:bg-primary/20 transition-colors",
+        // Layout & alignment
+        "flex items-center justify-center",
+        // Positioning
+        "relative",
+        // Sizing
+        "w-px",
+        // Background
+        "bg-border",
+        // Pseudo-element (hit area)
+        "after:absolute after:inset-y-0 after:-left-1 after:-right-1 after:content-['']",
+        // Interactive states
+        "hover:bg-primary/20 transition-colors",
         className
       )}
     />
