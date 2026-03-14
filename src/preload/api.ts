@@ -1,13 +1,15 @@
 import { ipcRenderer } from "electron";
-import { IpcChannel } from "@greyboard/core/ipc";
+import {
+  IpcChannel,
+  type DirectoryEntry,
+  type GreyboardApi,
+} from "@greyboard/core/ipc";
 
 export const api = {
   selectFolder: (): Promise<string | null> =>
     ipcRenderer.invoke(IpcChannel.SelectFolder),
 
-  readDir: (
-    dirPath: string
-  ): Promise<{ name: string; path: string; isDirectory: boolean }[]> =>
+  readDir: (dirPath: string): Promise<DirectoryEntry[]> =>
     ipcRenderer.invoke(IpcChannel.ReadDir, dirPath),
 
   readFile: (filePath: string): Promise<string> =>
@@ -36,6 +38,4 @@ export const api = {
     ipcRenderer.on(IpcChannel.FileChanged, handler);
     return () => ipcRenderer.removeListener(IpcChannel.FileChanged, handler);
   },
-};
-
-export type GreyboardApi = typeof api;
+} satisfies GreyboardApi;
