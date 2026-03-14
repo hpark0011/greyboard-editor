@@ -1,4 +1,5 @@
 import { useStore } from "../../store";
+import { useShallow } from "zustand/react/shallow";
 import { FileTree, FolderPicker } from "@greyboard/file-explorer";
 import { FolderOpen } from "lucide-react";
 import { IconButton } from "@greyboard/ui/components/icon-button";
@@ -12,22 +13,25 @@ export function ExplorerPanel() {
     refreshTree,
     toggleFolder,
     setSelectedFile,
+    setTree,
     openFile,
-  } = useStore();
+  } = useStore(
+    useShallow((s) => ({
+      workspaceRoot: s.workspaceRoot,
+      tree: s.tree,
+      selectedFilePath: s.selectedFilePath,
+      openFolder: s.openFolder,
+      refreshTree: s.refreshTree,
+      toggleFolder: s.toggleFolder,
+      setSelectedFile: s.setSelectedFile,
+      setTree: s.setTree,
+      openFile: s.openFile,
+    }))
+  );
 
   const handleFileClick = async (path: string) => {
     setSelectedFile(path);
     await openFile(path);
-  };
-
-  const handleSetTree = (
-    newTree: typeof tree | ((prev: typeof tree) => typeof tree),
-  ) => {
-    if (typeof newTree === "function") {
-      useStore.setState((state) => ({ tree: newTree(state.tree) }));
-    } else {
-      useStore.setState({ tree: newTree });
-    }
   };
 
   return (
@@ -53,7 +57,7 @@ export function ExplorerPanel() {
             onFileClick={handleFileClick}
             onToggleFolder={toggleFolder}
             onRefreshTree={refreshTree}
-            onSetTree={handleSetTree}
+            onSetTree={setTree}
           />
         )
         : <FolderPicker onOpenFolder={openFolder} />}
