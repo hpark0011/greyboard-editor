@@ -1,5 +1,6 @@
 import { useStore } from "../../store";
 import { useThemeEffect } from "../../hooks/use-theme-effect";
+import { useShallow } from "zustand/react/shallow";
 import {
   ResizableHandle,
   ResizableLayout,
@@ -24,9 +25,20 @@ export function AppLayout() {
     activeDocPath,
     updateContent,
     saveFile,
-  } = useStore();
+  } = useStore(
+    useShallow((s) => ({
+      leftSidebarVisible: s.leftSidebarVisible,
+      rightSidebarVisible: s.rightSidebarVisible,
+      workspaceRoot: s.workspaceRoot,
+      openFolder: s.openFolder,
+      openDocuments: s.openDocuments,
+      activeDocPath: s.activeDocPath,
+      updateContent: s.updateContent,
+      saveFile: s.saveFile,
+    }))
+  );
 
-  const activeDoc = activeDocPath ? openDocuments.get(activeDocPath) : null;
+  const activeDoc = activeDocPath ? openDocuments[activeDocPath] : null;
 
   return (
     <TooltipProvider delayDuration={300}>

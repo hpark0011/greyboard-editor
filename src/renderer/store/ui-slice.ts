@@ -13,7 +13,7 @@ export interface UiSlice {
 
 export const createUiSlice: StateCreator<UiSlice> = (set) => ({
   leftSidebarVisible: true,
-  rightSidebarVisible: true,
+  rightSidebarVisible: false,
   panelSizes: [20, 60, 20],
   theme: (typeof localStorage !== "undefined"
     ? (localStorage.getItem("greyboard-theme") as "light" | "dark" | "system")

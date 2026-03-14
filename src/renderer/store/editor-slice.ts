@@ -2,7 +2,7 @@ import type { StateCreator } from "zustand";
 import type { MarkdownDocument } from "@greyboard/core/editor";
 
 export interface EditorSlice {
-  openDocuments: Map<string, MarkdownDocument>;
+  openDocuments: Record<string, MarkdownDocument>;
   activeDocPath: string | null;
   openFile: (path: string) => Promise<void>;
   closeFile: (path: string) => void;
@@ -12,40 +12,44 @@ export interface EditorSlice {
 }
 
 export const createEditorSlice: StateCreator<EditorSlice> = (set, get) => ({
-  openDocuments: new Map(),
+  openDocuments: {},
   activeDocPath: null,
 
   openFile: async (path: string) => {
-    const existing = get().openDocuments.get(path);
-    if (existing) {
-      set({ activeDocPath: path });
-      return;
+    try {
+      const existing = get().openDocuments[path];
+      if (existing) {
+        set({ activeDocPath: path });
+        return;
+      }
+      const content = await window.greyboard.readFile(path);
+      const name = path.split("/").pop() ?? path;
+      const doc: MarkdownDocument = {
+        path,
+        name,
+        content,
+        isDirty: false,
+        lastSavedAt: Date.now(),
+      };
+      set((state) => ({
+        openDocuments: { ...state.openDocuments, [path]: doc },
+        activeDocPath: path,
+      }));
+    } catch (e) {
+      // Error is surfaced via file-explorer-slice error state
+      console.error(`Failed to open ${path}:`, (e as Error).message);
     }
-    const content = await window.greyboard.readFile(path);
-    const name = path.split("/").pop() ?? path;
-    const doc: MarkdownDocument = {
-      path,
-      name,
-      content,
-      isDirty: false,
-      lastSavedAt: Date.now(),
-    };
-    set((state) => {
-      const docs = new Map(state.openDocuments);
-      docs.set(path, doc);
-      return { openDocuments: docs, activeDocPath: path };
-    });
   },
 
   closeFile: (path: string) => {
     set((state) => {
-      const docs = new Map(state.openDocuments);
-      docs.delete(path);
+      const { [path]: _, ...rest } = state.openDocuments;
+      const remainingPaths = Object.keys(rest);
       const activeDocPath =
         state.activeDocPath === path
-          ? (docs.keys().next().value ?? null)
+          ? (remainingPaths[0] ?? null)
           : state.activeDocPath;
-      return { openDocuments: docs, activeDocPath };
+      return { openDocuments: rest, activeDocPath };
     });
   },
 
@@ -53,30 +57,40 @@ export const createEditorSlice: StateCreator<EditorSlice> = (set, get) => ({
 
   updateContent: (path: string, content: string) => {
     set((state) => {
-      const docs = new Map(state.openDocuments);
-      const doc = docs.get(path);
+      const doc = state.openDocuments[path];
       if (!doc) return state;
-      docs.set(path, { ...doc, content, isDirty: true });
-      return { openDocuments: docs };
+      return {
+        openDocuments: {
+          ...state.openDocuments,
+          [path]: { ...doc, content, isDirty: true },
+        },
+      };
     });
   },
 
   saveFile: async (path: string) => {
-    const doc = get().openDocuments.get(path);
-    if (!doc) return;
-    const savedContent = doc.content;
-    await window.greyboard.writeFile(path, savedContent);
-    set((state) => {
-      const docs = new Map(state.openDocuments);
-      const current = docs.get(path);
-      if (!current) return state;
-      const stillClean = current.content === savedContent;
-      docs.set(path, {
-        ...current,
-        isDirty: stillClean ? false : current.isDirty,
-        lastSavedAt: Date.now(),
+    try {
+      const doc = get().openDocuments[path];
+      if (!doc) return;
+      const savedContent = doc.content;
+      await window.greyboard.writeFile(path, savedContent);
+      set((state) => {
+        const current = state.openDocuments[path];
+        if (!current) return state;
+        const stillClean = current.content === savedContent;
+        return {
+          openDocuments: {
+            ...state.openDocuments,
+            [path]: {
+              ...current,
+              isDirty: stillClean ? false : current.isDirty,
+              lastSavedAt: Date.now(),
+            },
+          },
+        };
       });
-      return { openDocuments: docs };
-    });
+    } catch (e) {
+      console.error(`Failed to save ${path}:`, (e as Error).message);
+    }
   },
 });

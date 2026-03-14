@@ -5,10 +5,13 @@ export interface FileExplorerSlice {
   workspaceRoot: string | null;
   tree: TreeNode[];
   selectedFilePath: string | null;
+  error: string | null;
   openFolder: () => Promise<void>;
   refreshTree: () => Promise<void>;
   setSelectedFile: (path: string | null) => void;
+  setTree: (updater: TreeNode[] | ((prev: TreeNode[]) => TreeNode[])) => void;
   toggleFolder: (path: string) => void;
+  setError: (error: string | null) => void;
 }
 
 function toggleFolderInTree(nodes: TreeNode[], folderPath: string): TreeNode[] {
@@ -69,6 +72,8 @@ async function buildTree(dirPath: string): Promise<TreeNode[]> {
   return nodes;
 }
 
+let unwatchFileChange: (() => void) | null = null;
+
 export const createFileExplorerSlice: StateCreator<FileExplorerSlice> = (
   set,
   get
@@ -76,29 +81,46 @@ export const createFileExplorerSlice: StateCreator<FileExplorerSlice> = (
   workspaceRoot: null,
   tree: [],
   selectedFilePath: null,
+  error: null,
 
   openFolder: async () => {
-    const folderPath = await window.greyboard.selectFolder();
-    if (!folderPath) return;
-    set({ workspaceRoot: folderPath });
-    const tree = await buildTree(folderPath);
-    set({ tree });
-    window.greyboard.watchFolder(folderPath);
-    window.greyboard.onFileChange(() => {
-      get().refreshTree();
-    });
+    try {
+      const folderPath = await window.greyboard.selectFolder();
+      if (!folderPath) return;
+      set({ workspaceRoot: folderPath, error: null });
+      const tree = await buildTree(folderPath);
+      set({ tree });
+      window.greyboard.watchFolder(folderPath);
+      if (unwatchFileChange) unwatchFileChange();
+      unwatchFileChange = window.greyboard.onFileChange(() => {
+        get().refreshTree();
+      });
+    } catch (e) {
+      set({ error: `Failed to open folder: ${(e as Error).message}` });
+    }
   },
 
   refreshTree: async () => {
-    const root = get().workspaceRoot;
-    if (!root) return;
-    const oldTree = get().tree;
-    const newTree = await buildTree(root);
-    set({ tree: mergeExpandedState(newTree, oldTree) });
+    try {
+      const root = get().workspaceRoot;
+      if (!root) return;
+      const oldTree = get().tree;
+      const newTree = await buildTree(root);
+      set({ tree: mergeExpandedState(newTree, oldTree) });
+    } catch (e) {
+      set({ error: `Failed to refresh tree: ${(e as Error).message}` });
+    }
   },
 
   setSelectedFile: (path) => set({ selectedFilePath: path }),
 
+  setTree: (updater) =>
+    set((state) => ({
+      tree: typeof updater === "function" ? updater(state.tree) : updater,
+    })),
+
   toggleFolder: (path) =>
     set((state) => ({ tree: toggleFolderInTree(state.tree, path) })),
+
+  setError: (error) => set({ error }),
 });
