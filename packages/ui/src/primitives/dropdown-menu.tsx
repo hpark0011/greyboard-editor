@@ -47,7 +47,7 @@ function DropdownMenuContent({
           // background / surface
           "bg-popover text-popover-foreground",
           // sizing
-          "max-h-(--radix-dropdown-menu-content-available-height) min-w-[8rem]",
+          "max-h-(--radix-dropdown-menu-content-available-height) min-w-32",
           // layout / overflow
           "overflow-x-hidden overflow-y-auto",
           // shape / border
@@ -102,7 +102,7 @@ function DropdownMenuItem({
         // sizing (child svg)
         "[&_svg:not([class*='size-'])]:size-4",
         // alignment & behavior
-        "cursor-default outline-hidden select-none data-[inset]:pl-8 has-[svg]:pl-1.5 has-[svg]:gap-1 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='text-'])]:text-muted-foreground ",
+        "cursor-default outline-hidden select-none data-inset:pl-8 has-[svg]:pl-1.5 has-[svg]:gap-1 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='text-'])]:text-muted-foreground ",
         // variant states
         "data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive",
         // interactive states
