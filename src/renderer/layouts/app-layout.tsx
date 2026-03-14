@@ -1,13 +1,18 @@
 import { useStore } from "../store";
 import {
+  ResizableHandle,
   ResizableLayout,
   ResizablePanel,
-  ResizableHandle,
 } from "@greyboard/ui/components/resizable-layout";
 import { TooltipProvider } from "@greyboard/ui/primitives/tooltip";
-import { FolderPicker, FileTree } from "@greyboard/file-explorer";
+import { FileTree, FolderPicker } from "@greyboard/file-explorer";
 import { MarkdownEditor } from "@greyboard/editor";
-import { FolderOpen, PanelLeftClose, PanelRightClose, MessageSquare } from "lucide-react";
+import {
+  FolderOpen,
+  MessageSquare,
+  PanelLeftClose,
+  PanelRightClose,
+} from "lucide-react";
 import { IconButton } from "@greyboard/ui/components/icon-button";
 import { Button } from "@greyboard/ui/primitives/button";
 
@@ -38,7 +43,9 @@ export function AppLayout() {
     await openFile(path);
   };
 
-  const handleSetTree = (newTree: typeof tree | ((prev: typeof tree) => typeof tree)) => {
+  const handleSetTree = (
+    newTree: typeof tree | ((prev: typeof tree) => typeof tree),
+  ) => {
     if (typeof newTree === "function") {
       useStore.setState((state) => ({ tree: newTree(state.tree) }));
     } else {
@@ -60,9 +67,7 @@ export function AppLayout() {
               <PanelLeftClose className="h-4 w-4" />
             </IconButton>
             <span className="text-sm font-medium">
-              {workspaceRoot
-                ? workspaceRoot.split("/").pop()
-                : "Greyboard"}
+              {workspaceRoot ? workspaceRoot.split("/").pop() : "Greyboard"}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -91,7 +96,7 @@ export function AppLayout() {
                   order={1}
                   id="left-sidebar"
                 >
-                  <div className="flex h-full flex-col bg-sidebar-background">
+                  <div className="flex h-full flex-col">
                     <div className="flex items-center justify-between border-b px-3 py-1.5">
                       <span className="text-xs font-semibold uppercase text-muted-foreground">
                         Explorer
@@ -104,19 +109,19 @@ export function AppLayout() {
                         <FolderOpen className="h-3.5 w-3.5" />
                       </IconButton>
                     </div>
-                    {workspaceRoot ? (
-                      <FileTree
-                        tree={tree}
-                        selectedPath={selectedFilePath}
-                        workspaceRoot={workspaceRoot}
-                        onFileClick={handleFileClick}
-                        onToggleFolder={toggleFolder}
-                        onRefreshTree={refreshTree}
-                        onSetTree={handleSetTree}
-                      />
-                    ) : (
-                      <FolderPicker onOpenFolder={openFolder} />
-                    )}
+                    {workspaceRoot
+                      ? (
+                        <FileTree
+                          tree={tree}
+                          selectedPath={selectedFilePath}
+                          workspaceRoot={workspaceRoot}
+                          onFileClick={handleFileClick}
+                          onToggleFolder={toggleFolder}
+                          onRefreshTree={refreshTree}
+                          onSetTree={handleSetTree}
+                        />
+                      )
+                      : <FolderPicker onOpenFolder={openFolder} />}
                   </div>
                 </ResizablePanel>
                 <ResizableHandle />
@@ -125,29 +130,32 @@ export function AppLayout() {
 
             {/* Editor */}
             <ResizablePanel defaultSize={60} minSize={30} order={2} id="editor">
-              {activeDoc ? (
-                <MarkdownEditor
-                  content={activeDoc.content}
-                  filePath={activeDoc.path}
-                  isDirty={activeDoc.isDirty}
-                  onUpdate={(content) => updateContent(activeDoc.path, content)}
-                  onSave={() => saveFile(activeDoc.path)}
-                />
-              ) : (
-                <div className="flex h-full flex-col items-center justify-center gap-4 text-muted-foreground">
-                  <p className="text-sm">
-                    {workspaceRoot
-                      ? "Select a file to start editing"
-                      : "Open a folder to get started"}
-                  </p>
-                  {!workspaceRoot && (
-                    <Button variant="outline" size="sm" onClick={openFolder}>
-                      <FolderOpen className="mr-2 h-4 w-4" />
-                      Open Folder
-                    </Button>
-                  )}
-                </div>
-              )}
+              {activeDoc
+                ? (
+                  <MarkdownEditor
+                    content={activeDoc.content}
+                    filePath={activeDoc.path}
+                    isDirty={activeDoc.isDirty}
+                    onUpdate={(content) =>
+                      updateContent(activeDoc.path, content)}
+                    onSave={() => saveFile(activeDoc.path)}
+                  />
+                )
+                : (
+                  <div className="flex h-full flex-col items-center justify-center gap-4 text-muted-foreground">
+                    <p className="text-sm">
+                      {workspaceRoot
+                        ? "Select a file to start editing"
+                        : "Open a folder to get started"}
+                    </p>
+                    {!workspaceRoot && (
+                      <Button variant="outline" size="sm" onClick={openFolder}>
+                        <FolderOpen className="mr-2 h-4 w-4" />
+                        Open Folder
+                      </Button>
+                    )}
+                  </div>
+                )}
             </ResizablePanel>
 
             {/* Right sidebar */}
@@ -163,7 +171,7 @@ export function AppLayout() {
                   order={3}
                   id="right-sidebar"
                 >
-                  <div className="flex h-full flex-col bg-sidebar-background">
+                  <div className="flex h-full flex-col">
                     <div className="flex items-center gap-2 border-b px-3 py-1.5">
                       <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />
                       <span className="text-xs font-semibold uppercase text-muted-foreground">
