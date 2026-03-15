@@ -29,9 +29,11 @@ export const test = base.extend<ElectronFixtures>({
 
   electronApp: async ({}, use) => {
     const appEntry = path.resolve(__dirname, "../../dist/main/index.js");
+    // --no-sandbox is required on CI runners (Linux root/restricted namespaces)
+    const ciArgs = process.env.CI ? ["--no-sandbox", "--disable-gpu-sandbox"] : [];
     const electronApp = await _electron.launch({
       executablePath: electronBin,
-      args: [appEntry],
+      args: [appEntry, ...ciArgs],
       env: { ...process.env, ELECTRON_IS_E2E: "1" },
     });
     await use(electronApp);
