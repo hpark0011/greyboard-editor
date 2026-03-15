@@ -176,6 +176,7 @@ export { FolderClosedDarkIcon } from "./doc-icons/folder-closed-dark";
 export { FolderClosedLightIcon } from "./doc-icons/folder-closed-light";
 export { FolderOpenDarkIcon } from "./doc-icons/folder-open-dark";
 export { FolderOpenLightIcon } from "./doc-icons/folder-open-light";
+export { DocMdDarkIcon } from "./doc-icons/doc-md-dark";
 export { DocMdLightIcon } from "./doc-icons/doc-md-light";
 export { DocPdfLightIcon } from "./doc-icons/doc-pdf-light";
 export { DocTextDarkIcon } from "./doc-icons/doc-text-dark";

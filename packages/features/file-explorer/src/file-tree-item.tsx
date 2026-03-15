@@ -145,13 +145,17 @@ export function FileTreeItem({
         className={cn(
           "flex items-center gap-1",
           "w-full",
-          "px-1 py-0.5",
+          "px-1 py-0 my-0.5",
           "text-[13px]",
           isSelected && "bg-accent-dark text-accent-foreground",
         )}
         style={{ paddingLeft: `${depth * 12 + 4}px` }}
       >
-        <FileTreeIcons isFolder={isFolder} expanded={isExpanded} />
+        <FileTreeIcons
+          isFolder={isFolder}
+          expanded={isExpanded}
+          fileName={node.name}
+        />
         <RenameInput
           value={node.name}
           onCommit={handleRenameCommit}
@@ -165,14 +169,18 @@ export function FileTreeItem({
         className={cn(
           "flex items-center gap-1 text-left",
           "w-full",
-          "px-1 py-0.5",
+          "px-1 py-0 my-0.5",
           "text-[13px]",
           "hover:bg-accent-dark dark:hover:bg-accent",
           isSelected && "bg-accent-dark text-accent-foreground",
         )}
         style={{ paddingLeft: `${depth * 12 + 10}px` }}
       >
-        <FileTreeIcons isFolder={isFolder} expanded={isExpanded} />
+        <FileTreeIcons
+          isFolder={isFolder}
+          expanded={isExpanded}
+          fileName={node.name}
+        />
         <span className="truncate">{node.name}</span>
       </button>
     );

@@ -1,6 +1,8 @@
 import { File } from "lucide-react";
 import {
   ArrowTriangleRightFillIcon,
+  DocMdDarkIcon,
+  DocMdLightIcon,
   DocTextDarkIcon,
   DocTextLightIcon,
   FolderClosedDarkIcon,
@@ -15,9 +17,11 @@ const folderIconClass = "size-5 shrink-0";
 export function FileTreeIcons({
   isFolder,
   expanded,
+  fileName,
 }: {
   isFolder: boolean;
   expanded: boolean;
+  fileName?: string;
 }) {
   if (isFolder) {
     return (
@@ -52,11 +56,25 @@ export function FileTreeIcons({
       </>
     );
   }
+  const isMd = fileName?.endsWith(".md");
   return (
     <>
-      <span className="w-3.5 shrink-0" />
-      <DocTextLightIcon className={cn("size-5", "dark:hidden")} />
-      <DocTextDarkIcon className={cn("size-5", "hidden dark:block")} />
+      <span className="w-[7px] shrink-0" />
+      {isMd
+        ? (
+          <>
+            <DocMdLightIcon className={cn("size-[22px]", "dark:hidden")} />
+            <DocMdDarkIcon className={cn("size-[22px]", "hidden dark:block")} />
+          </>
+        )
+        : (
+          <>
+            <DocTextLightIcon className={cn("size-[22px]", "dark:hidden")} />
+            <DocTextDarkIcon
+              className={cn("size-[22px]", "hidden dark:block")}
+            />
+          </>
+        )}
     </>
   );
 }

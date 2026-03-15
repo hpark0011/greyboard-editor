@@ -4,7 +4,7 @@ import {
   FileTreeProvider,
   FolderPicker,
 } from "@greyboard/file-explorer";
-import { FolderFillBadgePlusIcon } from "@feel-good/icons";
+import { FolderFillBadgePlusIcon, PlusIcon } from "@feel-good/icons";
 import { IconButton } from "@greyboard/ui/components/icon-button";
 import { cn } from "@greyboard/ui/lib/utils";
 import { useMemo } from "react";
@@ -19,7 +19,7 @@ function ExplorerPanelHeader(
       data-slot="sidebar-header"
       data-sidebar="header"
       className={cn(
-        "flex justify-between items-center px-3 pr-1.5 py-1 h-8",
+        "flex justify-between items-center px-3 pr-1.5 py-1 h-8 after:content-[''] relative after:absolute after:bottom-[-24px] after:inset-x-0 after:bg-gradient-to-b after:from-background after:to-transparent after:w-full after:h-6 z-10",
         className,
       )}
       {...props}
@@ -86,16 +86,16 @@ export function ExplorerPanel() {
   return (
     <div className="flex h-full flex-col">
       <ExplorerPanelHeader>
-        <span className="text-sm font-medium">
+        <span className="text-[13px] font-medium">
           Archive
         </span>
 
         <IconButton
           tooltip="Open Folder"
           onClick={openFolder}
-          size="icon-sm"
+          size="icon-xs"
         >
-          <FolderFillBadgePlusIcon className="size-4.5" />
+          <PlusIcon className="size-5" />
         </IconButton>
       </ExplorerPanelHeader>
 
