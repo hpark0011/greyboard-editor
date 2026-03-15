@@ -1,18 +1,31 @@
-import fs from "fs/promises";
+import fs from "fs";
+import fsPromises from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
 import type { AppConfig } from "@greyboard/core/config";
 import { defaultConfig } from "@greyboard/core/config";
 
+function normalizeConfig(parsed: Partial<AppConfig>): AppConfig {
+  return {
+    ...defaultConfig,
+    ...parsed,
+    panelSizes: { ...defaultConfig.panelSizes, ...parsed.panelSizes },
+  };
+}
+
 export async function loadConfig(configPath: string): Promise<AppConfig> {
   try {
-    const content = await fs.readFile(configPath, "utf-8");
-    const parsed = JSON.parse(content) as Partial<AppConfig>;
-    return {
-      ...defaultConfig,
-      ...parsed,
-      panelSizes: { ...defaultConfig.panelSizes, ...parsed.panelSizes },
-    };
+    const content = await fsPromises.readFile(configPath, "utf-8");
+    return normalizeConfig(JSON.parse(content) as Partial<AppConfig>);
+  } catch {
+    return { ...defaultConfig };
+  }
+}
+
+export function loadConfigSync(configPath: string): AppConfig {
+  try {
+    const content = fs.readFileSync(configPath, "utf-8");
+    return normalizeConfig(JSON.parse(content) as Partial<AppConfig>);
   } catch {
     return { ...defaultConfig };
   }
@@ -26,6 +39,6 @@ export async function saveConfig(
     path.dirname(configPath),
     `.${path.basename(configPath)}.${randomUUID()}.tmp`
   );
-  await fs.writeFile(tmpPath, JSON.stringify(config, null, 2), "utf-8");
-  await fs.rename(tmpPath, configPath);
+  await fsPromises.writeFile(tmpPath, JSON.stringify(config, null, 2), "utf-8");
+  await fsPromises.rename(tmpPath, configPath);
 }

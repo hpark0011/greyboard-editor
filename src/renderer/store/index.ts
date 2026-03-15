@@ -6,7 +6,7 @@ import {
   type FileExplorerSlice,
 } from "./file-explorer-slice";
 import { createEditorSlice, type EditorSlice } from "./editor-slice";
-import { collectExpandedFolderPaths } from "./workspace-tree";
+import { collectExpandedFolderPaths, treeContainsPath } from "./workspace-tree";
 
 type SessionRestoreStatus = "idle" | "restoring" | "ready";
 
@@ -32,6 +32,7 @@ type SessionConfigPatch = Pick<
   | "leftSidebarVisible"
   | "rightSidebarVisible"
   | "panelSizes"
+  | "theme"
 >;
 
 function toPanelSizesTuple(
@@ -60,6 +61,7 @@ function createSessionSnapshot(state: AppStore): SessionConfigPatch {
     leftSidebarVisible: state.leftSidebarVisible,
     rightSidebarVisible: state.rightSidebarVisible,
     panelSizes: toPanelSizesConfig(state.panelSizes),
+    theme: state.theme,
   };
 }
 
@@ -105,6 +107,7 @@ export const useStore = create<AppStore>()((set, get, api) => ({
         leftSidebarVisible: config.leftSidebarVisible,
         rightSidebarVisible: config.rightSidebarVisible,
         panelSizes: toPanelSizesTuple(config.panelSizes),
+        theme: config.theme,
       });
 
       if (!config.lastOpenedFolder) {
@@ -131,12 +134,6 @@ export const useStore = create<AppStore>()((set, get, api) => ({
         return;
       }
 
-      set({
-        openDocuments: {},
-        activeDocPath: null,
-        selectedFilePath: null,
-      });
-
       const restoredOpenFilePaths: string[] = [];
       for (const filePath of config.openFilePaths) {
         await get().openFile(filePath);
@@ -145,15 +142,15 @@ export const useStore = create<AppStore>()((set, get, api) => ({
         }
       }
 
-      const { openDocuments } = get();
+      const { openDocuments, tree } = get();
       const selectedFilePath = config.selectedFilePath &&
-          openDocuments[config.selectedFilePath]
+          treeContainsPath(tree, config.selectedFilePath)
         ? config.selectedFilePath
-        : (restoredOpenFilePaths[0] ?? null);
+        : null;
       const activeDocPath = config.activeFilePath &&
           openDocuments[config.activeFilePath]
         ? config.activeFilePath
-        : (selectedFilePath ?? restoredOpenFilePaths.at(-1) ?? null);
+        : (restoredOpenFilePaths.at(-1) ?? null);
 
       set({
         selectedFilePath,

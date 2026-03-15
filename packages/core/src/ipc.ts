@@ -3,6 +3,7 @@ import type { AppConfig } from "./config";
 export enum IpcChannel {
   SelectFolder = "greyboard:select-folder",
   RestoreWorkspace = "greyboard:restore-workspace",
+  GetInitialTheme = "greyboard:get-initial-theme",
   ReadDir = "greyboard:read-dir",
   ReadFile = "greyboard:read-file",
   WriteFile = "greyboard:write-file",
@@ -24,6 +25,7 @@ export interface DirectoryEntry {
 
 export interface GreyboardApi {
   platform: NodeJS.Platform;
+  initialTheme: AppConfig["theme"];
   selectFolder: () => Promise<string | null>;
   restoreWorkspace: (rootPath: string) => Promise<string | null>;
   readDir: (dirPath: string) => Promise<DirectoryEntry[]>;

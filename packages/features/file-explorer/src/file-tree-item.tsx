@@ -28,16 +28,16 @@ function FileTreeIcons({
   if (isFolder) {
     return (
       <>
-        {expanded ? (
-          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-        ) : (
-          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-        )}
-        {expanded ? (
-          <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
-        ) : (
-          <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
-        )}
+        {expanded
+          ? (
+            <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+          )
+          : (
+            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+          )}
+        {expanded
+          ? <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
+          : <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />}
       </>
     );
   }
@@ -97,11 +97,9 @@ function CreateInput({
   return (
     <>
       <span className="w-3.5 shrink-0" />
-      {type === "folder" ? (
-        <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
-      ) : (
-        <File className="h-4 w-4 shrink-0 text-muted-foreground" />
-      )}
+      {type === "folder"
+        ? <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
+        : <File className="h-4 w-4 shrink-0 text-muted-foreground" />}
       <Input
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
@@ -177,41 +175,43 @@ export function FileTreeItem({
 
   const isExpanded = isFolder && "expanded" in node && !!node.expanded;
 
-  const triggerContent = mode === "renaming" ? (
-    <div
-      className={cn(
-        "flex items-center gap-1",
-        "w-full",
-        "px-1 py-0.5",
-        "text-sm",
-        isSelected && "bg-accent text-accent-foreground",
-      )}
-      style={{ paddingLeft: `${depth * 12 + 4}px` }}
-    >
-      <FileTreeIcons isFolder={isFolder} expanded={isExpanded} />
-      <RenameInput
-        value={node.name}
-        onCommit={handleRenameCommit}
-        onCancel={() => setMode("idle")}
-      />
-    </div>
-  ) : (
-    <button
-      onClick={handleClick}
-      className={cn(
-        "flex items-center gap-1 text-left",
-        "w-full",
-        "px-1 py-0.5",
-        "text-sm",
-        "hover:bg-gray-6 dark:hover:bg-accent",
-        isSelected && "bg-accent text-accent-foreground",
-      )}
-      style={{ paddingLeft: `${depth * 12 + 10}px` }}
-    >
-      <FileTreeIcons isFolder={isFolder} expanded={isExpanded} />
-      <span className="truncate">{node.name}</span>
-    </button>
-  );
+  const triggerContent = mode === "renaming"
+    ? (
+      <div
+        className={cn(
+          "flex items-center gap-1",
+          "w-full",
+          "px-1 py-0.5",
+          "text-sm",
+          isSelected && "bg-accent-dark text-accent-foreground",
+        )}
+        style={{ paddingLeft: `${depth * 12 + 4}px` }}
+      >
+        <FileTreeIcons isFolder={isFolder} expanded={isExpanded} />
+        <RenameInput
+          value={node.name}
+          onCommit={handleRenameCommit}
+          onCancel={() => setMode("idle")}
+        />
+      </div>
+    )
+    : (
+      <button
+        onClick={handleClick}
+        className={cn(
+          "flex items-center gap-1 text-left",
+          "w-full",
+          "px-1 py-0.5",
+          "text-sm",
+          "hover:bg-accent-dark dark:hover:bg-accent",
+          isSelected && "bg-accent-dark text-accent-foreground",
+        )}
+        style={{ paddingLeft: `${depth * 12 + 10}px` }}
+      >
+        <FileTreeIcons isFolder={isFolder} expanded={isExpanded} />
+        <span className="truncate">{node.name}</span>
+      </button>
+    );
 
   return (
     <>

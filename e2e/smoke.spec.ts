@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { _electron } from "playwright";
 import { test, expect } from "./fixtures/electron";
+import type { AppConfig } from "@greyboard/core/config";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const electronBin = require("electron") as unknown as string;
@@ -24,6 +25,14 @@ async function mockFolderDialog(
   await electronApp.evaluate(async ({ dialog }, dir) => {
     dialog.showOpenDialog = async () => ({ canceled: false, filePaths: [dir] });
   }, workspaceDir);
+}
+
+function writeUserConfig(userDataDir: string, config: Partial<AppConfig>) {
+  fs.writeFileSync(
+    path.join(userDataDir, "config.json"),
+    JSON.stringify(config, null, 2),
+    "utf-8"
+  );
 }
 
 test.describe("Smoke Tests", () => {
@@ -145,6 +154,30 @@ test.describe("Smoke Tests", () => {
     }
   });
 
+  test("restores selected explorer item without reopening a file", async ({ userDataDir, workspaceDir }) => {
+    writeUserConfig(userDataDir, {
+      lastOpenedFolder: workspaceDir,
+      openFilePaths: [],
+      selectedFilePath: path.join(workspaceDir, "hello.md"),
+      activeFilePath: null,
+      expandedFolderPaths: [],
+    });
+
+    const electronApp = await launchElectronApp(userDataDir);
+    try {
+      const page = await electronApp.firstWindow();
+      await page.waitForLoadState("domcontentloaded");
+
+      const selectedFileButton = page.getByRole("button", { name: "hello.md" });
+      await expect(selectedFileButton).toBeVisible();
+      await expect(selectedFileButton).toHaveClass(/bg-accent/);
+      await expect(page.locator(".ProseMirror")).not.toBeVisible();
+      await expect(page.locator("text=Select a file to start editing")).toBeVisible();
+    } finally {
+      await electronApp.close();
+    }
+  });
+
   test("skips missing files during session restore", async ({ userDataDir, workspaceDir }) => {
     const firstApp = await launchElectronApp(userDataDir);
     const firstPage = await firstApp.firstWindow();
@@ -169,6 +202,51 @@ test.describe("Smoke Tests", () => {
       await expect(secondPage.locator("text=subfolder")).toBeVisible();
     } finally {
       await secondApp.close();
+    }
+  });
+
+  test("persists dark theme across relaunch", async ({ userDataDir }) => {
+    const firstApp = await launchElectronApp(userDataDir);
+    const firstPage = await firstApp.firstWindow();
+    await firstPage.waitForLoadState("domcontentloaded");
+
+    const themeToggle = firstPage.getByLabel("Toggle theme");
+    await themeToggle.click();
+    await themeToggle.click();
+
+    await expect.poll(async () =>
+      firstPage.evaluate(() => document.documentElement.classList.contains("dark"))
+    ).toBe(true);
+    await firstPage.waitForTimeout(250);
+
+    await firstApp.close();
+
+    const secondApp = await launchElectronApp(userDataDir);
+    try {
+      const secondPage = await secondApp.firstWindow();
+      await secondPage.waitForLoadState("domcontentloaded");
+
+      await expect.poll(async () =>
+        secondPage.evaluate(() => document.documentElement.classList.contains("dark"))
+      ).toBe(true);
+    } finally {
+      await secondApp.close();
+    }
+  });
+
+  test("applies configured dark theme on startup", async ({ userDataDir }) => {
+    writeUserConfig(userDataDir, { theme: "dark" });
+
+    const electronApp = await launchElectronApp(userDataDir);
+    try {
+      const page = await electronApp.firstWindow();
+      await page.waitForLoadState("domcontentloaded");
+
+      await expect.poll(async () =>
+        page.evaluate(() => document.documentElement.classList.contains("dark"))
+      ).toBe(true);
+    } finally {
+      await electronApp.close();
     }
   });
 });

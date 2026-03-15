@@ -1,7 +1,7 @@
 import { ipcMain, dialog, BrowserWindow } from "electron";
 import { IpcChannel } from "@greyboard/core/ipc";
 import type { AppConfig } from "@greyboard/core/config";
-import { loadConfig, saveConfig } from "@greyboard/shared/config";
+import { loadConfig, loadConfigSync, saveConfig } from "@greyboard/shared/config";
 import fs from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
@@ -28,6 +28,10 @@ function getConfigPath(): string {
 
 async function readAppConfig(): Promise<AppConfig> {
   return loadConfig(getConfigPath());
+}
+
+function readAppConfigSync(): AppConfig {
+  return loadConfigSync(getConfigPath());
 }
 
 async function writeAppConfig(config: AppConfig): Promise<AppConfig> {
@@ -75,6 +79,10 @@ export function registerIpcHandlers() {
     IpcChannel.RestoreWorkspace,
     async (_event, rootPath: string) => resolveWorkspaceRoot(rootPath)
   );
+
+  ipcMain.on(IpcChannel.GetInitialTheme, (event) => {
+    event.returnValue = readAppConfigSync().theme;
+  });
 
   ipcMain.handle(IpcChannel.LoadConfig, async () => readAppConfig());
 

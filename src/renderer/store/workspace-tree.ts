@@ -23,17 +23,25 @@ export async function buildWorkspaceTree(
   dirPath: string,
   expandedFolderPaths: string[] = []
 ): Promise<TreeNode[]> {
+  return buildWorkspaceTreeRecursive(dirPath, new Set(expandedFolderPaths));
+}
+
+async function buildWorkspaceTreeRecursive(
+  dirPath: string,
+  expandedFolderPaths: Set<string>
+): Promise<TreeNode[]> {
   const entries = await window.greyboard.readDir(dirPath);
-  const expandedPathSet = new Set(expandedFolderPaths);
 
   return Promise.all(entries.map(async (entry) => {
     if (entry.isDirectory) {
-      const expanded = shouldExpandFolder(entry.path, expandedPathSet);
+      const expanded = shouldExpandFolder(entry.path, expandedFolderPaths);
       return {
         type: "folder" as const,
         name: entry.name,
         path: entry.path,
-        children: expanded ? await buildWorkspaceTree(entry.path, expandedFolderPaths) : [],
+        children: expanded
+          ? await buildWorkspaceTreeRecursive(entry.path, expandedFolderPaths)
+          : [],
         expanded,
       };
     }
@@ -71,4 +79,21 @@ export function collectExpandedFolderPaths(tree: TreeNode[]): string[] {
   visit(tree);
 
   return expandedPaths;
+}
+
+export function treeContainsPath(
+  tree: TreeNode[],
+  targetPath: string
+): boolean {
+  for (const node of tree) {
+    if (node.path === targetPath) {
+      return true;
+    }
+
+    if (node.type === "folder" && treeContainsPath(node.children, targetPath)) {
+      return true;
+    }
+  }
+
+  return false;
 }

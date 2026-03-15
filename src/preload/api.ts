@@ -7,6 +7,7 @@ import {
 
 export const api = {
   platform: process.platform,
+  initialTheme: ipcRenderer.sendSync(IpcChannel.GetInitialTheme),
 
   selectFolder: (): Promise<string | null> =>
     ipcRenderer.invoke(IpcChannel.SelectFolder),
