@@ -19,7 +19,7 @@ function ExplorerPanelHeader(
       data-slot="sidebar-header"
       data-sidebar="header"
       className={cn(
-        "flex justify-between items-center px-2.5 pr-2 py-1 h-10",
+        "flex justify-between items-center px-3 pr-1.5 py-1 h-10",
         className,
       )}
       {...props}
