@@ -10,13 +10,9 @@ export function EmptyState({ workspaceRoot, openFolder }: EmptyStateProps) {
   return (
     <div
       className={[
-        // Layout & alignment
         "flex flex-col items-center justify-center",
-        // Sizing
         "h-full",
-        // Spacing
-        "gap-4",
-        // Typography
+        "gap-5",
         "text-muted-foreground",
       ].join(" ")}
     >
@@ -26,8 +22,15 @@ export function EmptyState({ workspaceRoot, openFolder }: EmptyStateProps) {
           : "Open a folder to get started"}
       </p>
       {!workspaceRoot && (
-        <Button variant="outline" size="sm" onClick={openFolder}>
-          Open Folder
+        <Button
+          variant="primary"
+          size="default"
+          onClick={openFolder}
+          className="rounded-md"
+        >
+          <span className="text-[13px]">
+            Open Folder
+          </span>
         </Button>
       )}
     </div>

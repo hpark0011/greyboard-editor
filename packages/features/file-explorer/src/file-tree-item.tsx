@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
-  ChevronRight,
   ChevronDown,
+  ChevronRight,
   File,
   Folder,
   FolderOpen,
@@ -9,10 +9,10 @@ import {
 import type { TreeNode } from "@greyboard/core/file-system";
 import {
   ContextMenu,
-  ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
+  ContextMenuTrigger,
 } from "@greyboard/ui/primitives/context-menu";
 import { Input } from "@greyboard/ui/primitives/input";
 import { cn } from "@greyboard/ui/lib/utils";
@@ -81,85 +81,98 @@ export function FileTreeItem({
     <>
       <ContextMenu>
         <ContextMenuTrigger asChild>
-          {isRenaming ? (
-            <div
-              className={cn(
-                "flex items-center gap-1",
-                "w-full",
-                "rounded-sm",
-                "px-1 py-0.5",
-                "text-sm",
-                isSelected && "bg-accent text-accent-foreground"
-              )}
-              style={{ paddingLeft: `${depth * 12 + 4}px` }}
-            >
-              {isFolder ? (
-                <>
-                  {node.expanded ? (
-                    <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                  ) : (
-                    <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+          {isRenaming
+            ? (
+              <div
+                className={cn(
+                  "flex items-center gap-1",
+                  "w-full",
+                  "px-1 py-0.5",
+                  "text-sm",
+                  isSelected && "bg-accent text-accent-foreground",
+                )}
+                style={{ paddingLeft: `${depth * 12 + 4}px` }}
+              >
+                {isFolder
+                  ? (
+                    <>
+                      {node.expanded
+                        ? (
+                          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                        )
+                        : (
+                          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                        )}
+                      {node.expanded
+                        ? (
+                          <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        )
+                        : (
+                          <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        )}
+                    </>
+                  )
+                  : (
+                    <>
+                      <span className="w-3.5 shrink-0" />
+                      <File className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </>
                   )}
-                  {node.expanded ? (
-                    <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  ) : (
-                    <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <Input
+                  value={renameValue}
+                  onChange={(e) => setRenameValue(e.target.value)}
+                  onBlur={handleRenameSubmit}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleRenameSubmit();
+                    if (e.key === "Escape") setIsRenaming(false);
+                  }}
+                  className="h-5 text-xs px-1"
+                  autoFocus
+                />
+              </div>
+            )
+            : (
+              <button
+                onClick={handleClick}
+                className={cn(
+                  "flex items-center gap-1 text-left",
+                  "w-full",
+                  "rounded-sm",
+                  "px-1 py-0.5",
+                  "text-sm",
+                  "hover:bg-accent transition-colors",
+                  isSelected && "bg-accent text-accent-foreground",
+                )}
+                style={{ paddingLeft: `${depth * 12 + 4}px` }}
+              >
+                {isFolder
+                  ? (
+                    <>
+                      {node.expanded
+                        ? (
+                          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                        )
+                        : (
+                          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                        )}
+                      {node.expanded
+                        ? (
+                          <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        )
+                        : (
+                          <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        )}
+                    </>
+                  )
+                  : (
+                    <>
+                      <span className="w-3.5 shrink-0" />
+                      <File className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </>
                   )}
-                </>
-              ) : (
-                <>
-                  <span className="w-3.5 shrink-0" />
-                  <File className="h-4 w-4 shrink-0 text-muted-foreground" />
-                </>
-              )}
-              <Input
-                value={renameValue}
-                onChange={(e) => setRenameValue(e.target.value)}
-                onBlur={handleRenameSubmit}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleRenameSubmit();
-                  if (e.key === "Escape") setIsRenaming(false);
-                }}
-                className="h-5 text-xs px-1"
-                autoFocus
-              />
-            </div>
-          ) : (
-            <button
-              onClick={handleClick}
-              className={cn(
-                "flex items-center gap-1 text-left",
-                "w-full",
-                "rounded-sm",
-                "px-1 py-0.5",
-                "text-sm",
-                "hover:bg-accent transition-colors",
-                isSelected && "bg-accent text-accent-foreground"
-              )}
-              style={{ paddingLeft: `${depth * 12 + 4}px` }}
-            >
-              {isFolder ? (
-                <>
-                  {node.expanded ? (
-                    <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                  ) : (
-                    <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                  )}
-                  {node.expanded ? (
-                    <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  ) : (
-                    <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  )}
-                </>
-              ) : (
-                <>
-                  <span className="w-3.5 shrink-0" />
-                  <File className="h-4 w-4 shrink-0 text-muted-foreground" />
-                </>
-              )}
-              <span className="truncate">{node.name}</span>
-            </button>
-          )}
+                <span className="truncate">{node.name}</span>
+              </button>
+            )}
         </ContextMenuTrigger>
         <ContextMenuContent>
           {isFolder && (
@@ -212,11 +225,9 @@ export function FileTreeItem({
               style={{ paddingLeft: `${(depth + 1) * 12 + 4}px` }}
             >
               <span className="w-3.5 shrink-0" />
-              {isCreating === "folder" ? (
-                <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
-              ) : (
-                <File className="h-4 w-4 shrink-0 text-muted-foreground" />
-              )}
+              {isCreating === "folder"
+                ? <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
+                : <File className="h-4 w-4 shrink-0 text-muted-foreground" />}
               <Input
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
@@ -230,9 +241,9 @@ export function FileTreeItem({
                 }}
                 className="h-5 text-xs px-1"
                 autoFocus
-                placeholder={
-                  isCreating === "file" ? "filename.md" : "folder name"
-                }
+                placeholder={isCreating === "file"
+                  ? "filename.md"
+                  : "folder name"}
               />
             </div>
           )}
