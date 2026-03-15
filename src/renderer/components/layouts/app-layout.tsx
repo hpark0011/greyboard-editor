@@ -35,22 +35,20 @@ export function AppLayout() {
       activeDocPath: s.activeDocPath,
       updateContent: s.updateContent,
       saveFile: s.saveFile,
-    }))
+    })),
   );
 
   const activeDoc = activeDocPath ? openDocuments[activeDocPath] : null;
+  const editorDefaultSize = 100 - (leftSidebarVisible ? 20 : 0) -
+    (rightSidebarVisible ? 20 : 0);
 
   return (
     <TooltipProvider delayDuration={300}>
       <div
         className={[
-          // Layout
           "flex flex-col",
-          // Sizing
           "h-screen",
-          // Background
           "bg-background",
-          // Typography
           "text-foreground",
         ].join(" ")}
       >
@@ -78,7 +76,12 @@ export function AppLayout() {
             )}
 
             {/* Editor */}
-            <ResizablePanel defaultSize={60} minSize={30} order={2} id="editor">
+            <ResizablePanel
+              defaultSize={editorDefaultSize}
+              minSize={30}
+              order={2}
+              id="editor"
+            >
               {activeDoc
                 ? (
                   <MarkdownEditor
@@ -91,7 +94,10 @@ export function AppLayout() {
                   />
                 )
                 : (
-                  <EmptyState workspaceRoot={workspaceRoot} openFolder={openFolder} />
+                  <EmptyState
+                    workspaceRoot={workspaceRoot}
+                    openFolder={openFolder}
+                  />
                 )}
             </ResizablePanel>
 
@@ -117,11 +123,8 @@ export function AppLayout() {
                     </div>
                     <div
                       className={[
-                        // Layout & alignment
                         "flex flex-1 items-center justify-center",
-                        // Spacing
                         "p-4",
-                        // Typography
                         "text-sm text-muted-foreground",
                       ].join(" ")}
                     >
