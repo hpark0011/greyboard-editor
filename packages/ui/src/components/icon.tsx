@@ -1,11 +1,26 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import * as Icons from "@feel-good/icons";
+import {
+  PlusIcon,
+  SunMaxFillIcon,
+  MoonFillIcon,
+  ArrowTriangleRightFillIcon,
+  MinusSmallIcon,
+  CheckmarkSmallIcon,
+} from "@feel-good/icons";
 
 import { cn } from "../lib/utils";
 
-// Type-safe icon name from all available icons
-export type IconName = keyof typeof Icons;
+const iconMap = {
+  PlusIcon,
+  SunMaxFillIcon,
+  MoonFillIcon,
+  ArrowTriangleRightFillIcon,
+  MinusSmallIcon,
+  CheckmarkSmallIcon,
+} as const;
+
+export type IconName = keyof typeof iconMap;
 
 const iconVariants = cva("shrink-0", {
   variants: {
@@ -29,7 +44,7 @@ export interface IconProps
 }
 
 function Icon({ name, size, className, ...props }: IconProps) {
-  const IconComponent = Icons[name];
+  const IconComponent = iconMap[name];
 
   if (!IconComponent) {
     console.warn(`Icon "${String(name)}" not found`);
