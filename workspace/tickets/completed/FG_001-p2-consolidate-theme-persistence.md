@@ -3,7 +3,7 @@ id: FG_001
 title: "Theme persistence reads and writes are co-located in one file"
 date: 2026-03-15
 type: refactor
-status: to-do
+status: completed
 priority: p2
 description: "Theme localStorage persistence is split across ui-slice.ts (read) and use-theme-effect.ts (write), violating the project's own Zustand convention to keep persistence co-located. Consolidate read and write into a single location."
 dependencies: []
