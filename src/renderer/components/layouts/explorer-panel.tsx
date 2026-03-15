@@ -19,7 +19,7 @@ function ExplorerPanelHeader(
       data-slot="sidebar-header"
       data-sidebar="header"
       className={cn(
-        "flex justify-between items-center px-3 pr-1.5 py-1 h-10",
+        "flex justify-between items-center px-3 pr-1.5 py-1 h-8",
         className,
       )}
       {...props}
@@ -86,7 +86,7 @@ export function ExplorerPanel() {
   return (
     <div className="flex h-full flex-col">
       <ExplorerPanelHeader>
-        <span className="font-medium text-sm">
+        <span className="text-sm font-medium">
           Archive
         </span>
 
