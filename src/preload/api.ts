@@ -48,4 +48,6 @@ export const api = {
   loadConfig: () => ipcRenderer.invoke(IpcChannel.LoadConfig),
 
   updateConfig: (patch) => ipcRenderer.invoke(IpcChannel.UpdateConfig, patch),
+
+  updateConfigSync: (patch) => ipcRenderer.sendSync(IpcChannel.UpdateConfigSync, patch),
 } satisfies GreyboardApi;

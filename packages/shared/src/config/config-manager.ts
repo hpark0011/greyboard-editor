@@ -42,3 +42,12 @@ export async function saveConfig(
   await fsPromises.writeFile(tmpPath, JSON.stringify(config, null, 2), "utf-8");
   await fsPromises.rename(tmpPath, configPath);
 }
+
+export function saveConfigSync(configPath: string, config: AppConfig): void {
+  const tmpPath = path.join(
+    path.dirname(configPath),
+    `.${path.basename(configPath)}.${randomUUID()}.tmp`
+  );
+  fs.writeFileSync(tmpPath, JSON.stringify(config, null, 2), "utf-8");
+  fs.renameSync(tmpPath, configPath);
+}

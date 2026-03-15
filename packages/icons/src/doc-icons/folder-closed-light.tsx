@@ -18,8 +18,8 @@ export function FolderClosedLightIcon(
       <path
         d="M5.67383 5.09961H8.43457C8.9083 5.09961 9.25896 5.14409 9.56738 5.25195C9.87506 5.3596 10.1481 5.53334 10.4619 5.80371L10.4629 5.80469L11.0537 6.29688C11.3008 6.5124 11.5311 6.66421 11.7871 6.76172C12.0439 6.85948 12.3208 6.90038 12.6582 6.90039H21.958C22.9497 6.90039 23.6807 7.15193 24.1641 7.63574C24.6473 8.11957 24.9004 8.85239 24.9004 9.84961V19.9512C24.9003 20.9485 24.6494 21.6825 24.2012 22.167C23.754 22.6503 23.0961 22.9004 22.249 22.9004H6.04199C5.04509 22.9004 4.31404 22.6504 3.83203 22.168C3.35027 21.6856 3.09966 20.9534 3.09961 19.9512V7.96094C3.09961 6.98763 3.34076 6.27498 3.77441 5.80664C4.20691 5.3396 4.84559 5.09961 5.67383 5.09961Z"
         stroke="white"
-        stroke-opacity="0.1"
-        stroke-width="0.2"
+        strokeOpacity="0.1"
+        strokeWidth="0.2"
       />
       <rect x="3" y="9" width="22" height="14" rx="2.6" fill="#C0C0C0" />
       <rect
@@ -29,8 +29,8 @@ export function FolderClosedLightIcon(
         height="13.8"
         rx="2.5"
         stroke="white"
-        stroke-opacity="0.1"
-        stroke-width="0.2"
+        strokeOpacity="0.1"
+        strokeWidth="0.2"
       />
       <defs>
         <linearGradient
@@ -41,8 +41,8 @@ export function FolderClosedLightIcon(
           y2="23"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#BBBBBB" />
-          <stop offset="1" stop-color="#444444" />
+          <stop stopColor="#BBBBBB" />
+          <stop offset="1" stopColor="#444444" />
         </linearGradient>
       </defs>
     </svg>

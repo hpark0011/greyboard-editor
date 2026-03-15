@@ -169,6 +169,30 @@ let lastPersistedSnapshotJson: string | null = null;
 let queuedSnapshot: SessionConfigPatch | null = null;
 let queuedSnapshotJson: string | null = null;
 
+function flushSessionPersist(
+  snapshot = queuedSnapshot,
+  snapshotJson = queuedSnapshotJson
+) {
+  if (!snapshot || !snapshotJson || snapshotJson === lastPersistedSnapshotJson) {
+    return;
+  }
+
+  if (persistTimeout) {
+    clearTimeout(persistTimeout);
+    persistTimeout = null;
+  }
+
+  queuedSnapshot = null;
+  queuedSnapshotJson = null;
+
+  try {
+    window.greyboard.updateConfigSync(snapshot);
+    lastPersistedSnapshotJson = snapshotJson;
+  } catch (error) {
+    console.error("Failed to persist session state:", error);
+  }
+}
+
 function scheduleSessionPersist(
   snapshot: SessionConfigPatch,
   snapshotJson: string
@@ -181,6 +205,8 @@ function scheduleSessionPersist(
   }
 
   persistTimeout = setTimeout(() => {
+    persistTimeout = null;
+
     if (!queuedSnapshot || !queuedSnapshotJson) {
       return;
     }
@@ -189,14 +215,7 @@ function scheduleSessionPersist(
     const snapshotJsonToPersist = queuedSnapshotJson;
     queuedSnapshot = null;
     queuedSnapshotJson = null;
-
-    void window.greyboard.updateConfig(snapshotToPersist)
-      .then(() => {
-        lastPersistedSnapshotJson = snapshotJsonToPersist;
-      })
-      .catch((error) => {
-        console.error("Failed to persist session state:", error);
-      });
+    flushSessionPersist(snapshotToPersist, snapshotJsonToPersist);
   }, 150);
 }
 
@@ -217,11 +236,25 @@ const unsubscribeSessionPersistence = useStore.subscribe((state) => {
   scheduleSessionPersist(snapshot, snapshotJson);
 });
 
+function handleWindowBeforeUnload() {
+  const state = useStore.getState();
+  if (state.sessionRestoreStatus !== "ready") {
+    return;
+  }
+
+  const snapshot = createSessionSnapshot(state);
+  const snapshotJson = JSON.stringify(snapshot);
+  flushSessionPersist(snapshot, snapshotJson);
+}
+
+window.addEventListener("beforeunload", handleWindowBeforeUnload);
+
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
     unsubscribeSessionPersistence();
     if (persistTimeout) {
       clearTimeout(persistTimeout);
     }
+    window.removeEventListener("beforeunload", handleWindowBeforeUnload);
   });
 }

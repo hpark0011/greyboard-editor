@@ -1,7 +1,12 @@
 import { ipcMain, dialog, BrowserWindow } from "electron";
 import { IpcChannel } from "@greyboard/core/ipc";
 import type { AppConfig } from "@greyboard/core/config";
-import { loadConfig, loadConfigSync, saveConfig } from "@greyboard/shared/config";
+import {
+  loadConfig,
+  loadConfigSync,
+  saveConfig,
+  saveConfigSync,
+} from "@greyboard/shared/config";
 import fs from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
@@ -36,6 +41,11 @@ function readAppConfigSync(): AppConfig {
 
 async function writeAppConfig(config: AppConfig): Promise<AppConfig> {
   await saveConfig(getConfigPath(), config);
+  return config;
+}
+
+function writeAppConfigSync(config: AppConfig): AppConfig {
+  saveConfigSync(getConfigPath(), config);
   return config;
 }
 
@@ -93,6 +103,11 @@ export function registerIpcHandlers() {
       return writeAppConfig(mergeConfigPatch(currentConfig, patch));
     }
   );
+
+  ipcMain.on(IpcChannel.UpdateConfigSync, (event, patch: Partial<AppConfig>) => {
+    const currentConfig = readAppConfigSync();
+    event.returnValue = writeAppConfigSync(mergeConfigPatch(currentConfig, patch));
+  });
 
   ipcMain.handle(IpcChannel.ReadDir, async (_event, dirPath: string) => {
     const resolved = validatePath(dirPath);

@@ -15,6 +15,7 @@ export enum IpcChannel {
   FileChanged = "greyboard:file-changed",
   LoadConfig = "greyboard:load-config",
   UpdateConfig = "greyboard:update-config",
+  UpdateConfigSync = "greyboard:update-config-sync",
 }
 
 export interface DirectoryEntry {
@@ -39,4 +40,5 @@ export interface GreyboardApi {
   onFileChange: (callback: () => void) => () => void;
   loadConfig: () => Promise<AppConfig>;
   updateConfig: (patch: Partial<AppConfig>) => Promise<AppConfig>;
+  updateConfigSync: (patch: Partial<AppConfig>) => AppConfig;
 }
