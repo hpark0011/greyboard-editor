@@ -4,6 +4,9 @@ import path from "path";
 import fs from "fs";
 import os from "os";
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const electronBin = require("electron") as unknown as string;
+
 type ElectronFixtures = {
   electronApp: ElectronApplication;
   page: Page;
@@ -27,6 +30,7 @@ export const test = base.extend<ElectronFixtures>({
   electronApp: async ({}, use) => {
     const appEntry = path.resolve(__dirname, "../../dist/main/index.js");
     const electronApp = await _electron.launch({
+      executablePath: electronBin,
       args: [appEntry],
       env: { ...process.env, ELECTRON_IS_E2E: "1" },
     });
