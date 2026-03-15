@@ -18,6 +18,7 @@ Three-process Electron app with Bun bundler and Vite for the renderer:
 | `bun run build`      | Production build (main → preload → renderer)          |
 | `bun run typecheck`  | `tsc --noEmit`                                        |
 | `bun run test:smoke` | Build + verify output artifacts exist and are correct |
+| `bun run test:e2e`   | Build + run Playwright Electron E2E smoke tests       |
 
 ## Stack Gotchas
 

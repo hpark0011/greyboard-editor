@@ -1,10 +1,31 @@
-import { useMemo } from "react";
-import { useStore } from "../../store";
-import { useShallow } from "zustand/react/shallow";
-import { FileTree, FileTreeProvider, FolderPicker } from "@greyboard/file-explorer";
 import type { FileTreeActions } from "@greyboard/file-explorer";
-import { FolderOpen } from "lucide-react";
+import {
+  FileTree,
+  FileTreeProvider,
+  FolderPicker,
+} from "@greyboard/file-explorer";
+import { Icon } from "@greyboard/ui/components/icon";
 import { IconButton } from "@greyboard/ui/components/icon-button";
+import { cn } from "@greyboard/ui/lib/utils";
+import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
+import { useStore } from "../../store";
+
+function ExplorerPanelHeader(
+  { className, ...props }: React.ComponentProps<"div">,
+) {
+  return (
+    <div
+      data-slot="sidebar-header"
+      data-sidebar="header"
+      className={cn(
+        "flex justify-between items-center px-2.5 pr-2 py-1 h-10",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
 
 export function ExplorerPanel() {
   const {
@@ -34,7 +55,7 @@ export function ExplorerPanel() {
       renameItem: s.renameItem,
       deleteItem: s.deleteItem,
       loadChildren: s.loadChildren,
-    }))
+    })),
   );
 
   const actions: FileTreeActions = useMemo(
@@ -50,23 +71,33 @@ export function ExplorerPanel() {
       onDelete: deleteItem,
       onLoadChildren: loadChildren,
     }),
-    [setSelectedFile, openFile, toggleFolder, createFile, createFolder, renameItem, deleteItem, loadChildren]
+    [
+      setSelectedFile,
+      openFile,
+      toggleFolder,
+      createFile,
+      createFolder,
+      renameItem,
+      deleteItem,
+      loadChildren,
+    ],
   );
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between px-3 py-1.5">
-        <span className="text-xs font-semibold text-muted-foreground">
-          Explorer
+      <ExplorerPanelHeader>
+        <span className="font-medium text-sm">
+          Archive
         </span>
+
         <IconButton
           tooltip="Open Folder"
           onClick={openFolder}
           size="icon-xs"
         >
-          <FolderOpen className="h-3.5 w-3.5" />
+          <Icon name="PlusIcon" />
         </IconButton>
-      </div>
+      </ExplorerPanelHeader>
       {workspaceRoot
         ? (
           <FileTreeProvider value={actions}>

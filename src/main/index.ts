@@ -6,7 +6,7 @@ import { createMenu } from "./menu";
 
 let mainWindow: BrowserWindow | null = null;
 
-const isDev = !app.isPackaged;
+const isDev = !app.isPackaged && process.env.ELECTRON_IS_E2E !== "1";
 
 function resolveDistAssetPath(...segments: string[]): string {
   const appPath = app.getAppPath();

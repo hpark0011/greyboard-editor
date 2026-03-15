@@ -17,9 +17,12 @@
     "typecheck": "tsc --noEmit",
     "test:smoke": "bun scripts/smoke-test.ts",
     "dev:clean": "lsof -ti :5173 | xargs kill -9 2>/dev/null; pkill -f electronmon 2>/dev/null; echo 'Cleaned'",
-    "dev:safe": "bun run dev:clean && bun run dev"
+    "dev:safe": "bun run dev:clean && bun run dev",
+    "test:e2e": "bun run build && npx playwright test --config e2e/playwright.config.ts"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/bun": "^1.3.10",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "concurrently": "^9.1.2",

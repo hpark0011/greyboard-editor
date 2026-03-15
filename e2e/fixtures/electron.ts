@@ -1,0 +1,44 @@
+import { test as base, type ElectronApplication, type Page } from "@playwright/test";
+import { _electron } from "playwright";
+import path from "path";
+import fs from "fs";
+import os from "os";
+
+type ElectronFixtures = {
+  electronApp: ElectronApplication;
+  page: Page;
+  workspaceDir: string;
+};
+
+export const test = base.extend<ElectronFixtures>({
+  workspaceDir: async ({}, use) => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "greyboard-e2e-"));
+    // Seed test files
+    fs.writeFileSync(path.join(dir, "hello.md"), "# Hello World\n\nTest content.");
+    const subfolder = path.join(dir, "subfolder");
+    fs.mkdirSync(subfolder);
+    fs.writeFileSync(path.join(subfolder, "nested.md"), "# Nested\n\nNested content.");
+
+    await use(dir);
+
+    fs.rmSync(dir, { recursive: true, force: true });
+  },
+
+  electronApp: async ({}, use) => {
+    const appEntry = path.resolve(__dirname, "../../dist/main/index.js");
+    const electronApp = await _electron.launch({
+      args: [appEntry],
+      env: { ...process.env, ELECTRON_IS_E2E: "1" },
+    });
+    await use(electronApp);
+    await electronApp.close();
+  },
+
+  page: async ({ electronApp }, use) => {
+    const page = await electronApp.firstWindow();
+    await page.waitForLoadState("domcontentloaded");
+    await use(page);
+  },
+});
+
+export { expect } from "@playwright/test";
