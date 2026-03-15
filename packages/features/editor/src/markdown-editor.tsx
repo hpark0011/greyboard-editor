@@ -1,5 +1,5 @@
-import { useEffect, useCallback } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useCallback, useEffect } from "react";
+import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
@@ -58,7 +58,7 @@ export function MarkdownEditor({
         onSave();
       }
     },
-    [onSave]
+    [onSave],
   );
 
   useEffect(() => {
@@ -73,14 +73,14 @@ export function MarkdownEditor({
   return (
     <div className="flex h-full flex-col">
       <EditorToolbar editor={editor} />
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-6 mx-auto w-full items-center">
         <EditorContent
           editor={editor}
           className={[
             // Typography (prose)
             "prose prose-neutral dark:prose-invert",
             // Sizing
-            "max-w-none",
+            "max-w-2xl mx-auto",
             // Interactive states
             "focus:outline-none",
             // Child overrides

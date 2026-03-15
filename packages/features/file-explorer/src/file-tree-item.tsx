@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  ChevronDown,
-  ChevronRight,
-  File,
-  Folder,
-  FolderOpen,
-} from "lucide-react";
+import { File, Folder } from "lucide-react";
 import type { TreeNode } from "@greyboard/core/file-system";
 import {
   ContextMenu,
@@ -17,37 +11,7 @@ import {
 import { Input } from "@greyboard/ui/primitives/input";
 import { cn } from "@greyboard/ui/lib/utils";
 import { useFileTreeActions } from "./file-tree-context";
-
-function FileTreeIcons({
-  isFolder,
-  expanded,
-}: {
-  isFolder: boolean;
-  expanded: boolean;
-}) {
-  if (isFolder) {
-    return (
-      <>
-        {expanded
-          ? (
-            <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-          )
-          : (
-            <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-          )}
-        {expanded
-          ? <FolderOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
-          : <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />}
-      </>
-    );
-  }
-  return (
-    <>
-      <span className="w-3.5 shrink-0" />
-      <File className="h-4 w-4 shrink-0 text-muted-foreground" />
-    </>
-  );
-}
+import { FileTreeIcons } from "./file-tree-icons";
 
 function RenameInput({
   value,
@@ -98,8 +62,8 @@ function CreateInput({
     <>
       <span className="w-3.5 shrink-0" />
       {type === "folder"
-        ? <Folder className="h-4 w-4 shrink-0 text-muted-foreground" />
-        : <File className="h-4 w-4 shrink-0 text-muted-foreground" />}
+        ? <Folder className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+        : <File className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />}
       <Input
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
@@ -182,7 +146,7 @@ export function FileTreeItem({
           "flex items-center gap-1",
           "w-full",
           "px-1 py-0.5",
-          "text-sm",
+          "text-[13px]",
           isSelected && "bg-accent-dark text-accent-foreground",
         )}
         style={{ paddingLeft: `${depth * 12 + 4}px` }}
@@ -202,7 +166,7 @@ export function FileTreeItem({
           "flex items-center gap-1 text-left",
           "w-full",
           "px-1 py-0.5",
-          "text-sm",
+          "text-[13px]",
           "hover:bg-accent-dark dark:hover:bg-accent",
           isSelected && "bg-accent-dark text-accent-foreground",
         )}

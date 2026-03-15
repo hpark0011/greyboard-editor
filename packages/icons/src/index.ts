@@ -172,8 +172,13 @@ export { XmarkBoldIcon } from "./components/xmark-bold";
 export { XmarkCircleFillIcon } from "./components/xmark-circle-fill";
 export { XmarkSmallIcon } from "./components/xmark-small";
 export { DocImageLightIcon } from "./doc-icons/doc-image-light";
+export { FolderClosedDarkIcon } from "./doc-icons/folder-closed-dark";
+export { FolderClosedLightIcon } from "./doc-icons/folder-closed-light";
+export { FolderOpenDarkIcon } from "./doc-icons/folder-open-dark";
+export { FolderOpenLightIcon } from "./doc-icons/folder-open-light";
 export { DocMdLightIcon } from "./doc-icons/doc-md-light";
 export { DocPdfLightIcon } from "./doc-icons/doc-pdf-light";
+export { DocTextDarkIcon } from "./doc-icons/doc-text-dark";
 export { DocTextLightIcon } from "./doc-icons/doc-text-light";
 
 export { GithubIcon } from "./social-icons/github";
