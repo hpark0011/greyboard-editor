@@ -24,6 +24,7 @@ interface ThemeToggleProps {
 export function ThemeToggle({ theme, onThemeChange }: ThemeToggleProps) {
   return (
     <IconButton
+      aria-label="Toggle theme"
       onClick={() => onThemeChange(nextTheme[theme])}
       size="icon-xs"
     >
