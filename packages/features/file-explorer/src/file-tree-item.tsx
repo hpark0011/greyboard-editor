@@ -16,32 +16,29 @@ import {
 } from "@greyboard/ui/primitives/context-menu";
 import { Input } from "@greyboard/ui/primitives/input";
 import { cn } from "@greyboard/ui/lib/utils";
+import { useFileTreeActions } from "./file-tree-context";
 
 interface FileTreeItemProps {
   node: TreeNode;
   depth: number;
   selectedPath: string | null;
-  onFileClick: (path: string) => void;
-  onToggleFolder: (path: string) => void;
-  onCreateFile: (parentPath: string, name: string) => void;
-  onCreateFolder: (parentPath: string, name: string) => void;
-  onRename: (oldPath: string, newName: string) => void;
-  onDelete: (path: string) => void;
-  onLoadChildren: (path: string) => Promise<void>;
 }
 
 export function FileTreeItem({
   node,
   depth,
   selectedPath,
-  onFileClick,
-  onToggleFolder,
-  onCreateFile,
-  onCreateFolder,
-  onRename,
-  onDelete,
-  onLoadChildren,
 }: FileTreeItemProps) {
+  const {
+    onFileClick,
+    onToggleFolder,
+    onCreateFile,
+    onCreateFolder,
+    onRename,
+    onDelete,
+    onLoadChildren,
+  } = useFileTreeActions();
+
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState(node.name);
   const [isCreating, setIsCreating] = useState<"file" | "folder" | null>(null);
@@ -87,15 +84,10 @@ export function FileTreeItem({
           {isRenaming ? (
             <div
               className={cn(
-                // Layout & alignment
                 "flex items-center gap-1",
-                // Sizing
                 "w-full",
-                // Shape
                 "rounded-sm",
-                // Spacing
                 "px-1 py-0.5",
-                // Typography
                 "text-sm",
                 isSelected && "bg-accent text-accent-foreground"
               )}
@@ -136,17 +128,11 @@ export function FileTreeItem({
             <button
               onClick={handleClick}
               className={cn(
-                // Layout & alignment
                 "flex items-center gap-1 text-left",
-                // Sizing
                 "w-full",
-                // Shape
                 "rounded-sm",
-                // Spacing
                 "px-1 py-0.5",
-                // Typography
                 "text-sm",
-                // Interactive states
                 "hover:bg-accent transition-colors",
                 isSelected && "bg-accent text-accent-foreground"
               )}
@@ -256,13 +242,6 @@ export function FileTreeItem({
               node={child}
               depth={depth + 1}
               selectedPath={selectedPath}
-              onFileClick={onFileClick}
-              onToggleFolder={onToggleFolder}
-              onCreateFile={onCreateFile}
-              onCreateFolder={onCreateFolder}
-              onRename={onRename}
-              onDelete={onDelete}
-              onLoadChildren={onLoadChildren}
             />
           ))}
         </>

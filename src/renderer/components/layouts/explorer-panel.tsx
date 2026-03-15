@@ -1,6 +1,8 @@
+import { useMemo } from "react";
 import { useStore } from "../../store";
 import { useShallow } from "zustand/react/shallow";
-import { FileTree, FolderPicker } from "@greyboard/file-explorer";
+import { FileTree, FileTreeProvider, FolderPicker } from "@greyboard/file-explorer";
+import type { FileTreeActions } from "@greyboard/file-explorer";
 import { FolderOpen } from "lucide-react";
 import { IconButton } from "@greyboard/ui/components/icon-button";
 
@@ -10,29 +12,46 @@ export function ExplorerPanel() {
     tree,
     selectedFilePath,
     openFolder,
-    refreshTree,
     toggleFolder,
     setSelectedFile,
-    setTree,
     openFile,
+    createFile,
+    createFolder,
+    renameItem,
+    deleteItem,
+    loadChildren,
   } = useStore(
     useShallow((s) => ({
       workspaceRoot: s.workspaceRoot,
       tree: s.tree,
       selectedFilePath: s.selectedFilePath,
       openFolder: s.openFolder,
-      refreshTree: s.refreshTree,
       toggleFolder: s.toggleFolder,
       setSelectedFile: s.setSelectedFile,
-      setTree: s.setTree,
       openFile: s.openFile,
+      createFile: s.createFile,
+      createFolder: s.createFolder,
+      renameItem: s.renameItem,
+      deleteItem: s.deleteItem,
+      loadChildren: s.loadChildren,
     }))
   );
 
-  const handleFileClick = async (path: string) => {
-    setSelectedFile(path);
-    await openFile(path);
-  };
+  const actions: FileTreeActions = useMemo(
+    () => ({
+      onFileClick: (path: string) => {
+        setSelectedFile(path);
+        openFile(path);
+      },
+      onToggleFolder: toggleFolder,
+      onCreateFile: createFile,
+      onCreateFolder: createFolder,
+      onRename: renameItem,
+      onDelete: deleteItem,
+      onLoadChildren: loadChildren,
+    }),
+    [setSelectedFile, openFile, toggleFolder, createFile, createFolder, renameItem, deleteItem, loadChildren]
+  );
 
   return (
     <div className="flex h-full flex-col">
@@ -50,15 +69,12 @@ export function ExplorerPanel() {
       </div>
       {workspaceRoot
         ? (
-          <FileTree
-            tree={tree}
-            selectedPath={selectedFilePath}
-            workspaceRoot={workspaceRoot}
-            onFileClick={handleFileClick}
-            onToggleFolder={toggleFolder}
-            onRefreshTree={refreshTree}
-            onSetTree={setTree}
-          />
+          <FileTreeProvider value={actions}>
+            <FileTree
+              tree={tree}
+              selectedPath={selectedFilePath}
+            />
+          </FileTreeProvider>
         )
         : <FolderPicker onOpenFolder={openFolder} />}
     </div>
