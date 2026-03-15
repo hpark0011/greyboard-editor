@@ -39,8 +39,8 @@ test.describe("Smoke Tests", () => {
     // The sidebar should be visible by default with "Archive" header
     await expect(page.locator("text=Archive")).toBeVisible();
 
-    // Click the sidebar toggle — first button in the title bar
-    const sidebarToggle = page.locator(".titlebar-drag button").first();
+    // Click the sidebar toggle
+    const sidebarToggle = page.getByLabel("Toggle sidebar");
     await sidebarToggle.click();
 
     // "Archive" text should disappear
@@ -52,37 +52,27 @@ test.describe("Smoke Tests", () => {
   });
 
   test("theme toggle cycles theme", async ({ page }) => {
-    // Default theme is "system" (or "light" depending on localStorage)
-    // Click ThemeToggle — it's the button before "Chat" in the title bar
-    const themeButton = page.locator("button").filter({ has: page.locator("svg") }).locator("nth=-2");
+    // Theme cycle: system → light → dark → system
+    // With isolated user-data, starts at "system". Click through the full cycle
+    // and verify the dark class changes at least once, proving the toggle works.
+    const themeToggle = page.getByLabel("Toggle theme");
 
-    // Get initial dark class state
     const initialHasDark = await page.evaluate(() =>
       document.documentElement.classList.contains("dark")
     );
 
-    // Click theme toggle multiple times to cycle through light → dark → system
-    // Find the theme toggle more reliably — it's the IconButton right before Chat
-    const chatButton = page.locator("button", { hasText: "Chat" });
-    const themeToggle = chatButton.locator("xpath=preceding-sibling::button[1]");
-    await themeToggle.click();
+    // Click through all three states (system → light → dark → system)
+    let darkChanged = false;
+    for (let i = 0; i < 3; i++) {
+      await themeToggle.click();
+      await page.waitForTimeout(100);
+      const hasDark = await page.evaluate(() =>
+        document.documentElement.classList.contains("dark")
+      );
+      if (hasDark !== initialHasDark) darkChanged = true;
+    }
 
-    // After one click, the class list should have potentially changed
-    const afterFirstClick = await page.evaluate(() =>
-      document.documentElement.classList.contains("dark")
-    );
-
-    // Click again
-    await themeToggle.click();
-
-    const afterSecondClick = await page.evaluate(() =>
-      document.documentElement.classList.contains("dark")
-    );
-
-    // At least one of the transitions should show a change (light→dark adds "dark", dark→system may change)
-    // We verify the toggle is functional by checking at least one state change occurred
-    const changed = initialHasDark !== afterFirstClick || afterFirstClick !== afterSecondClick;
-    expect(changed).toBe(true);
+    expect(darkChanged).toBe(true);
   });
 
   test("chat panel toggles", async ({ page }) => {

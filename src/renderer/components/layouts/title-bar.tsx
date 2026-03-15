@@ -54,6 +54,7 @@ export function TitleBar() {
     >
       <div className="flex items-center gap-2 relative">
         <IconButton
+          aria-label="Toggle sidebar"
           tooltip={leftSidebarVisible ? "Hide sidebar" : "Show sidebar"}
           onClick={toggleLeftSidebar}
           size="icon-xs"
