@@ -146,7 +146,7 @@ export function FileTreeItem({
           "flex items-center gap-1",
           "w-full",
           "px-1 py-0 my-0.5",
-          "text-[13px]",
+          "text-[13px] font-medium",
           isSelected && "bg-accent-dark text-accent-foreground",
         )}
         style={{ paddingLeft: `${depth * 12 + 4}px` }}
@@ -169,10 +169,10 @@ export function FileTreeItem({
         className={cn(
           "flex items-center gap-1 text-left",
           "w-full",
-          "px-1 py-0 my-0.5",
-          "text-[13px]",
+          "px-1 py-[1px]",
+          "text-[13px] font-medium text-foreground/70",
           "hover:bg-accent-dark dark:hover:bg-accent",
-          isSelected && "bg-accent-dark text-accent-foreground",
+          isSelected && "bg-accent-dark text-foreground",
         )}
         style={{ paddingLeft: `${depth * 12 + 10}px` }}
       >

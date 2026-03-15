@@ -48,7 +48,7 @@ function ResizableHandle({
       data-slot="resizable-handle"
       className={cn(
         // Layout
-        "relative flex items-center justify-center",
+        "relative flex items-center justify-center z-30",
         // Sizing
         "w-px",
         // Background
