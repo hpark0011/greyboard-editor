@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+*.tsbuildinfo
+.DS_Store
+.greyboard-session/
+playwright-report/
+test-results/
