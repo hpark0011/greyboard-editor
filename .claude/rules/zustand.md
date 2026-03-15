@@ -44,7 +44,13 @@ The renderer uses Zustand (v5) with the **slice pattern** (`src/renderer/store/`
 
 7. **Apply middleware at the combined store level, not per-slice** — `persist`, `devtools`, and other middleware should wrap the final combined `create()` call, not individual slice creators. Applying middleware inside slices causes unexpected behavior (e.g., each slice persisting independently with conflicting keys).
 
-8. **Use immutable update patterns for nested state** — `set()` only does a shallow merge at the top level. Nested objects must be spread manually or use `immer` middleware. Never mutate nested state in place.
+8. **Multiple focused stores, split by domain** — create separate stores per domain (`useAgentStore`, `useWorkspaceStore`, `useUIStore`). No god stores that mix unrelated concerns.
+
+9. **Derive, don't duplicate** — compute derived values in selectors or `useMemo`. Never store a derived copy alongside its source data; it will inevitably drift.
+
+10. **Immer middleware is opt-in** — allowed for complex nested updates but not required for flat state. When not using Immer, use immutable spread patterns.
+
+11. **Use immutable update patterns for nested state** — `set()` only does a shallow merge at the top level. Nested objects must be spread manually or use `immer` middleware. Never mutate nested state in place.
    ```ts
    // WRONG — mutates in place
    set((state) => { state.person.firstName = 'New'; });

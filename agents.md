@@ -28,16 +28,15 @@ Three-process Electron app with Bun bundler and Vite for the renderer:
 5. **Vite port 5173 hardcoded**: `dev:electron` uses `wait-on http://localhost:5173`. If Vite picks another port (because 5173 is occupied by a zombie), Electron hangs. Use `bun run dev:safe` to clean up first.
 6. **tsconfig `moduleResolution: "bundler"`**: Required for Vite + workspace imports. Don't change to `node` or `nodenext`.
 
-## Zustand Conventions
+## State Management Conventions
 
-The renderer uses Zustand (v5) with the **slice pattern** (`src/renderer/store/`). Key rules:
+State lives at the lowest scope that satisfies its needs. Three tiers, in order of preference:
 
-- Always use selectors with `useShallow` — never call `useStore()` bare.
-- Use plain objects (`Record<string, T>`) for collections, not `Map`.
-- Mutate state through store actions only — no `useStore.setState()` from components.
-- Clean up side-effect subscriptions to avoid listener leaks.
-- Wrap async IPC calls (`window.greyboard.*`) in try/catch.
-- Keep persistence reads and writes co-located.
+1. **`useState` / `useReducer`** — Default choice. UI-only, ephemeral state (form inputs, toggles, hover, animation flags). If state resets on unmount and no sibling needs it, it belongs here.
+
+2. **React Context** — Only for compound component patterns (e.g., Tabs sharing active index with TabPanel children) or theme/locale providers. Never for app state.
+
+3. **Zustand** — Shared state across distant components, state that persists across navigation, or state accessed outside the React tree (Electron IPC handlers, tray logic, background tasks). See [.claude/rules/zustand.md](.claude/rules/zustand.md) for conventions and examples.
 
 ## Efficiency Rules
 
@@ -51,5 +50,5 @@ After implementing any feature, run this checklist before considering work compl
 
 1. **Requirements Check** — Re-read the original request; verify each requirement by reading code, running tests, or exercising the feature.
 2. **Build & Test** — `bun run typecheck`, `bun run build`, and `bun run test:smoke` must all pass. When a `test:e2e` script exists in `package.json`, run the E2E suite too.
-3. **Security (Electron)** — No dangerous flags (`--no-sandbox`, `--disable-web-security`, `--remote-debugging-port`) in production builds; `contextIsolation: true` in all `webPreferences`.
+3. **Security (Electron)** — See [.claude/rules/electron-security.md](.claude/rules/electron-security.md).
 4. **Fix and Report** — Fix any failure before reporting. List each check and its pass/fail status.
