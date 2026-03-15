@@ -1,11 +1,21 @@
 import { ipcMain, dialog, BrowserWindow } from "electron";
 import { IpcChannel } from "@greyboard/core/ipc";
+import type { AppConfig } from "@greyboard/core/config";
+import {
+  loadConfig,
+  loadConfigSync,
+  saveConfig,
+  saveConfigSync,
+} from "@greyboard/shared/config";
 import fs from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
+import { app } from "electron";
 
 let workspaceRoot: string | null = null;
 let activeWatchAbort: AbortController | null = null;
+
+const CONFIG_FILE_NAME = "config.json";
 
 function validatePath(filePath: string): string {
   if (!workspaceRoot) throw new Error("No workspace open");
@@ -17,14 +27,86 @@ function validatePath(filePath: string): string {
   return resolved;
 }
 
+function getConfigPath(): string {
+  return path.join(app.getPath("userData"), CONFIG_FILE_NAME);
+}
+
+async function readAppConfig(): Promise<AppConfig> {
+  return loadConfig(getConfigPath());
+}
+
+function readAppConfigSync(): AppConfig {
+  return loadConfigSync(getConfigPath());
+}
+
+async function writeAppConfig(config: AppConfig): Promise<AppConfig> {
+  await saveConfig(getConfigPath(), config);
+  return config;
+}
+
+function writeAppConfigSync(config: AppConfig): AppConfig {
+  saveConfigSync(getConfigPath(), config);
+  return config;
+}
+
+function mergeConfigPatch(
+  config: AppConfig,
+  patch: Partial<AppConfig>
+): AppConfig {
+  return {
+    ...config,
+    ...patch,
+    panelSizes: { ...config.panelSizes, ...patch.panelSizes },
+  };
+}
+
+async function resolveWorkspaceRoot(
+  rootPath: string
+): Promise<string | null> {
+  try {
+    const resolved = path.resolve(rootPath);
+    const stat = await fs.stat(resolved);
+    if (!stat.isDirectory()) {
+      return null;
+    }
+    workspaceRoot = resolved;
+    return resolved;
+  } catch {
+    return null;
+  }
+}
+
 export function registerIpcHandlers() {
   ipcMain.handle(IpcChannel.SelectFolder, async () => {
     const result = await dialog.showOpenDialog({
       properties: ["openDirectory"],
     });
     if (result.canceled || result.filePaths.length === 0) return null;
-    workspaceRoot = result.filePaths[0];
-    return workspaceRoot;
+    return resolveWorkspaceRoot(result.filePaths[0]);
+  });
+
+  ipcMain.handle(
+    IpcChannel.RestoreWorkspace,
+    async (_event, rootPath: string) => resolveWorkspaceRoot(rootPath)
+  );
+
+  ipcMain.on(IpcChannel.GetInitialTheme, (event) => {
+    event.returnValue = readAppConfigSync().theme;
+  });
+
+  ipcMain.handle(IpcChannel.LoadConfig, async () => readAppConfig());
+
+  ipcMain.handle(
+    IpcChannel.UpdateConfig,
+    async (_event, patch: Partial<AppConfig>) => {
+      const currentConfig = await readAppConfig();
+      return writeAppConfig(mergeConfigPatch(currentConfig, patch));
+    }
+  );
+
+  ipcMain.on(IpcChannel.UpdateConfigSync, (event, patch: Partial<AppConfig>) => {
+    const currentConfig = readAppConfigSync();
+    event.returnValue = writeAppConfigSync(mergeConfigPatch(currentConfig, patch));
   });
 
   ipcMain.handle(IpcChannel.ReadDir, async (_event, dirPath: string) => {

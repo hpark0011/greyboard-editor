@@ -1,12 +1,19 @@
 import type { StateCreator } from "zustand";
 import type { TreeNode } from "@greyboard/core/file-system";
+import {
+  buildWorkspaceTree,
+  collectExpandedFolderPaths,
+} from "./workspace-tree";
 
 export interface FileExplorerSlice {
   workspaceRoot: string | null;
   tree: TreeNode[];
   selectedFilePath: string | null;
   error: string | null;
-  openFolder: () => Promise<void>;
+  initializeWorkspace: (
+    rootPath: string,
+    expandedFolderPaths?: string[]
+  ) => Promise<boolean>;
   refreshTree: () => Promise<void>;
   setSelectedFile: (path: string | null) => void;
   setTree: (updater: TreeNode[] | ((prev: TreeNode[]) => TreeNode[])) => void;
@@ -24,57 +31,13 @@ function toggleFolderInTree(nodes: TreeNode[], folderPath: string): TreeNode[] {
     if (node.type === "folder" && node.path === folderPath) {
       return { ...node, expanded: !node.expanded };
     }
+
     if (node.type === "folder") {
       return { ...node, children: toggleFolderInTree(node.children, folderPath) };
     }
+
     return node;
   });
-}
-
-function mergeExpandedState(newTree: TreeNode[], oldTree: TreeNode[]): TreeNode[] {
-  const oldMap = new Map<string, TreeNode>();
-  for (const node of oldTree) oldMap.set(node.path, node);
-
-  return newTree.map((node) => {
-    const old = oldMap.get(node.path);
-    if (node.type === "folder" && old?.type === "folder") {
-      return {
-        ...node,
-        expanded: old.expanded,
-        children: mergeExpandedState(node.children, old.children),
-      };
-    }
-    return node;
-  });
-}
-
-async function buildTree(dirPath: string): Promise<TreeNode[]> {
-  const entries = await window.greyboard.readDir(dirPath);
-  const nodes: TreeNode[] = [];
-
-  for (const entry of entries) {
-    if (entry.isDirectory) {
-      nodes.push({
-        type: "folder",
-        name: entry.name,
-        path: entry.path,
-        children: [],
-        expanded: false,
-      });
-    } else {
-      const ext = entry.name.includes(".")
-        ? "." + entry.name.split(".").pop()!
-        : "";
-      nodes.push({
-        type: "file",
-        name: entry.name,
-        path: entry.path,
-        extension: ext,
-      });
-    }
-  }
-
-  return nodes;
 }
 
 let unwatchFileChange: (() => void) | null = null;
@@ -88,30 +51,41 @@ export const createFileExplorerSlice: StateCreator<FileExplorerSlice> = (
   selectedFilePath: null,
   error: null,
 
-  openFolder: async () => {
+  initializeWorkspace: async (rootPath: string, expandedFolderPaths = []) => {
     try {
-      const folderPath = await window.greyboard.selectFolder();
-      if (!folderPath) return;
-      set({ workspaceRoot: folderPath, error: null });
-      const tree = await buildTree(folderPath);
-      set({ tree });
-      window.greyboard.watchFolder(folderPath);
-      if (unwatchFileChange) unwatchFileChange();
-      unwatchFileChange = window.greyboard.onFileChange(() => {
-        get().refreshTree();
+      const tree = await buildWorkspaceTree(rootPath, expandedFolderPaths);
+      set({
+        workspaceRoot: rootPath,
+        tree,
+        selectedFilePath: null,
+        error: null,
       });
+
+      await window.greyboard.watchFolder(rootPath);
+      if (unwatchFileChange) {
+        unwatchFileChange();
+      }
+      unwatchFileChange = window.greyboard.onFileChange(() => {
+        void get().refreshTree();
+      });
+
+      return true;
     } catch (e) {
       set({ error: `Failed to open folder: ${(e as Error).message}` });
+      return false;
     }
   },
 
   refreshTree: async () => {
     try {
       const root = get().workspaceRoot;
-      if (!root) return;
-      const oldTree = get().tree;
-      const newTree = await buildTree(root);
-      set({ tree: mergeExpandedState(newTree, oldTree) });
+      if (!root) {
+        return;
+      }
+
+      const expandedFolderPaths = collectExpandedFolderPaths(get().tree);
+      const tree = await buildWorkspaceTree(root, expandedFolderPaths);
+      set({ tree });
     } catch (e) {
       set({ error: `Failed to refresh tree: ${(e as Error).message}` });
     }
@@ -171,36 +145,18 @@ export const createFileExplorerSlice: StateCreator<FileExplorerSlice> = (
 
   loadChildren: async (folderPath) => {
     try {
-      const entries = await window.greyboard.readDir(folderPath);
-      const children: TreeNode[] = entries.map((entry) => {
-        if (entry.isDirectory) {
-          return {
-            type: "folder" as const,
-            name: entry.name,
-            path: entry.path,
-            children: [],
-            expanded: false,
-          };
-        }
-        const ext = entry.name.includes(".")
-          ? "." + entry.name.split(".").pop()!
-          : "";
-        return {
-          type: "file" as const,
-          name: entry.name,
-          path: entry.path,
-          extension: ext,
-        };
-      });
+      const children = await buildWorkspaceTree(folderPath);
 
       const updateChildren = (nodes: TreeNode[]): TreeNode[] =>
         nodes.map((node) => {
           if (node.type === "folder" && node.path === folderPath) {
             return { ...node, children };
           }
+
           if (node.type === "folder") {
             return { ...node, children: updateChildren(node.children) };
           }
+
           return node;
         });
 

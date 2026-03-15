@@ -1,0 +1,17 @@
+/*
+* resizable.css
+*
+* Resizable-specific styles and CSS variables
+*/
+
+:root {
+  --resizable-handle-hover: var(--border);
+}
+
+.dark {
+  --resizable-handle-hover: var(--border);
+}
+
+@theme inline {
+  --color-resizable-handle-hover: var(--resizable-handle-hover);
+}

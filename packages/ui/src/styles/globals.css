@@ -30,6 +30,7 @@
 @import "./card.css";
 @import "./toast.css";
 @import "./chat-input.css";
+@import "./resizable";
 
 /* custom variant */
 @custom-variant dark (&:is(.dark *));
@@ -56,6 +57,8 @@
   --accent: var(--gray-2);
   --accent-foreground: var(--gray-12);
 
+  --accent-dark: var(--gray-6);
+
   --muted: var(--gray-6);
   --muted-foreground: var(--gray-9);
 
@@ -63,7 +66,6 @@
   --border: var(--gray-6);
   --border-subtle: var(--gray-5);
   --ring: var(--gray-7);
-  --resizable-handle-hover: var(--border-subtle);
 
   /* Icon */
   --icon: var(--gray-8);
@@ -91,6 +93,8 @@
   --accent: var(--gray-3);
   --accent-foreground: var(--gray-12);
 
+  --accent-dark: var(--gray-3);
+
   --muted: var(--gray-6);
   --muted-foreground: var(--gray-9);
 
@@ -98,7 +102,6 @@
   --border: var(--gray-4);
   --border-subtle: var(--gray-3);
   --ring: var(--gray-3);
-  --resizable-handle-hover: var(--border-subtle);
 
   /* Icon */
   --icon: var(--gray-8);
@@ -126,6 +129,8 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
 
+  --color-accent-dark: var(--accent-dark);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
 
@@ -133,7 +138,6 @@
   --color-border: var(--border);
   --color-border-subtle: var(--border-subtle);
   --color-ring: var(--ring);
-  --color-resizable-handle-hover: var(--resizable-handle-hover);
 
   /* Icon */
   --color-icon: var(--icon);

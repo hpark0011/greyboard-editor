@@ -7,9 +7,13 @@ import {
 
 export const api = {
   platform: process.platform,
+  initialTheme: ipcRenderer.sendSync(IpcChannel.GetInitialTheme),
 
   selectFolder: (): Promise<string | null> =>
     ipcRenderer.invoke(IpcChannel.SelectFolder),
+
+  restoreWorkspace: (rootPath: string): Promise<string | null> =>
+    ipcRenderer.invoke(IpcChannel.RestoreWorkspace, rootPath),
 
   readDir: (dirPath: string): Promise<DirectoryEntry[]> =>
     ipcRenderer.invoke(IpcChannel.ReadDir, dirPath),
@@ -40,4 +44,10 @@ export const api = {
     ipcRenderer.on(IpcChannel.FileChanged, handler);
     return () => ipcRenderer.removeListener(IpcChannel.FileChanged, handler);
   },
+
+  loadConfig: () => ipcRenderer.invoke(IpcChannel.LoadConfig),
+
+  updateConfig: (patch) => ipcRenderer.invoke(IpcChannel.UpdateConfig, patch),
+
+  updateConfigSync: (patch) => ipcRenderer.sendSync(IpcChannel.UpdateConfigSync, patch),
 } satisfies GreyboardApi;

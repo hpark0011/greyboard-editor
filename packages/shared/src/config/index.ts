@@ -1,1 +1,1 @@
-export { loadConfig, saveConfig } from "./config-manager";
+export { loadConfig, loadConfigSync, saveConfig, saveConfigSync } from "./config-manager";

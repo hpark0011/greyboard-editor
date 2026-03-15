@@ -6,7 +6,7 @@
     <title>Greyboard</title>
     <script>
       (function() {
-        var t = localStorage.getItem("greyboard-theme") || "system";
+        var t = (window.greyboard && window.greyboard.initialTheme) || "system";
         var dark = t === "dark" || (t === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
         if (dark) document.documentElement.classList.add("dark");
       })();

@@ -6,6 +6,13 @@ import { createMenu } from "./menu";
 
 let mainWindow: BrowserWindow | null = null;
 
+const userDataPathArg = process.argv.find((arg) =>
+  arg.startsWith("--user-data-dir=")
+);
+if (userDataPathArg) {
+  app.setPath("userData", userDataPathArg.slice("--user-data-dir=".length));
+}
+
 const isDev = !app.isPackaged && process.env.ELECTRON_IS_E2E !== "1";
 
 function resolveDistAssetPath(...segments: string[]): string {

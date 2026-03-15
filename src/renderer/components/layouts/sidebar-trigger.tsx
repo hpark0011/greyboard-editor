@@ -5,11 +5,11 @@ function SidebarTriggerVerticalLine({ isOpen }: { isOpen: boolean }) {
     <div
       className={cn(
         "relative",
-        "w-[1.5px]",
+        "w-[2px]",
         "transition-all duration-200",
         isOpen
-          ? "h-full left-[5px] bg-icon rounded-none"
-          : "h-[calc(100%-3px)] left-0.5 rounded-full bg-icon/70",
+          ? "h-full left-[5px] bg-icon rounded-none w-[1.5px]"
+          : "h-[calc(100%-3px)] left-[1.5px] rounded-full bg-icon/60",
       )}
     />
   );

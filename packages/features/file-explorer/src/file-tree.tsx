@@ -10,7 +10,7 @@ interface FileTreeProps {
 export function FileTree({ tree, selectedPath }: FileTreeProps) {
   return (
     <ScrollArea className="h-full">
-      <div className="p-1">
+      <div className="pt-4 pb-20">
         {tree.map((node) => (
           <FileTreeItem
             key={node.path}
