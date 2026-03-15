@@ -1,5 +1,7 @@
 import type { StateCreator } from "zustand";
 
+const THEME_STORAGE_KEY = "greyboard-theme";
+
 export interface UiSlice {
   leftSidebarVisible: boolean;
   rightSidebarVisible: boolean;
@@ -13,15 +15,18 @@ export interface UiSlice {
 
 export const createUiSlice: StateCreator<UiSlice> = (set) => ({
   leftSidebarVisible: true,
-  rightSidebarVisible: true,
+  rightSidebarVisible: false,
   panelSizes: [20, 60, 20],
   theme: (typeof localStorage !== "undefined"
-    ? (localStorage.getItem("greyboard-theme") as "light" | "dark" | "system")
+    ? (localStorage.getItem(THEME_STORAGE_KEY) as "light" | "dark" | "system")
     : null) || "system",
   toggleLeftSidebar: () =>
     set((state) => ({ leftSidebarVisible: !state.leftSidebarVisible })),
   toggleRightSidebar: () =>
     set((state) => ({ rightSidebarVisible: !state.rightSidebarVisible })),
   setPanelSizes: (sizes) => set({ panelSizes: sizes }),
-  setTheme: (theme) => set({ theme }),
+  setTheme: (theme) => {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    set({ theme });
+  },
 });

@@ -76,7 +76,16 @@ export function MarkdownEditor({
       <div className="flex-1 overflow-auto p-6">
         <EditorContent
           editor={editor}
-          className="prose prose-neutral max-w-none dark:prose-invert focus:outline-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-full"
+          className={[
+            // Typography (prose)
+            "prose prose-neutral dark:prose-invert",
+            // Sizing
+            "max-w-none",
+            // Interactive states
+            "focus:outline-none",
+            // Child overrides
+            "[&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-full",
+          ].join(" ")}
         />
       </div>
       <EditorStatusBar

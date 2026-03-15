@@ -1,7 +1,8 @@
 import { IconButton } from "@greyboard/ui/components/icon-button";
 import { ThemeToggle } from "@greyboard/ui/components/theme-toggle";
 import { Button } from "@greyboard/ui/primitives/button";
-import { useStore } from "../store";
+import { useStore } from "../../store";
+import { useShallow } from "zustand/react/shallow";
 import { SidebarTrigger } from "./sidebar-trigger";
 
 function workspaceName(rootPath: string): string {
@@ -17,7 +18,17 @@ export function TitleBar() {
     workspaceRoot,
     theme,
     setTheme,
-  } = useStore();
+  } = useStore(
+    useShallow((s) => ({
+      leftSidebarVisible: s.leftSidebarVisible,
+      rightSidebarVisible: s.rightSidebarVisible,
+      toggleLeftSidebar: s.toggleLeftSidebar,
+      toggleRightSidebar: s.toggleRightSidebar,
+      workspaceRoot: s.workspaceRoot,
+      theme: s.theme,
+      setTheme: s.setTheme,
+    }))
+  );
 
   const platform = window.greyboard?.platform;
   const isMac = platform === "darwin";
@@ -25,9 +36,21 @@ export function TitleBar() {
 
   return (
     <div
-      className={`flex h-9 items-center justify-between border-b px-3 titlebar-drag ${
-        isMac ? "pl-[72px]" : ""
-      } ${isWindows ? "pr-[140px]" : ""}`}
+      className={[
+        // Layout & alignment
+        "flex items-center justify-between",
+        // Sizing
+        "h-9",
+        // Shape
+        "border-b",
+        // Spacing
+        "px-3",
+        // Drag region
+        "titlebar-drag",
+        // Platform-specific positioning
+        isMac ? "pl-[72px]" : "",
+        isWindows ? "pr-[140px]" : "",
+      ].filter(Boolean).join(" ")}
     >
       <div className="flex items-center gap-2 relative">
         <IconButton
@@ -36,7 +59,7 @@ export function TitleBar() {
           size="icon-xs"
           className=" items-center justify-center flex flex-col"
         >
-          <SidebarTrigger />
+          <SidebarTrigger isOpen={leftSidebarVisible} />
         </IconButton>
       </div>
       <span className="text-[13px] font-medium">

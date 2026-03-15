@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { useStore } from "../store";
 
-const STORAGE_KEY = "greyboard-theme";
-
 export function useThemeEffect() {
   const theme = useStore((s) => s.theme);
 
@@ -18,7 +16,6 @@ export function useThemeEffect() {
     };
 
     applyTheme(theme);
-    localStorage.setItem(STORAGE_KEY, theme);
 
     if (theme === "system") {
       const mq = window.matchMedia("(prefers-color-scheme: dark)");
