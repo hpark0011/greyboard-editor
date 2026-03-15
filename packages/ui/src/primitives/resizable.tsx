@@ -54,7 +54,7 @@ function ResizableHandle({
         // Background
         "bg-border",
         // Positioning (hit area via ::after)
-        "after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2",
+        "after:absolute after:inset-y-0 after:w-auto after:translate-x-0 after:-left-1 after:-right-1",
         // Focus
         "focus-visible:ring-ring focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:outline-hidden",
         // Vertical direction
@@ -62,8 +62,8 @@ function ResizableHandle({
         "data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:translate-x-0 data-[panel-group-direction=vertical]:after:-translate-y-1/2",
         "[&[data-panel-group-direction=vertical]>div]:rotate-90",
         // Hover / Drag (synced with library hit-area via data attribute)
-        "data-[resize-handle-state=hover]:bg-resizable-handle-hover data-[resize-handle-state=hover]:shadow-[0_0_0_0px_var(--color-resizable-handle-hover)]",
-        "data-[resize-handle-state=drag]:bg-resizable-handle-hover data-[resize-handle-state=drag]:shadow-[0_0_0_0px_var(--color-resizable-handle-hover)]",
+        "data-[resize-handle-state=hover]:bg-border data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)]",
+        "data-[resize-handle-state=drag]:bg-border data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)]",
         // Group for child grip visibility
         "group",
         className,

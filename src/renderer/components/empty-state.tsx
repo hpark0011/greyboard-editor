@@ -27,7 +27,6 @@ export function EmptyState({ workspaceRoot, openFolder }: EmptyStateProps) {
       </p>
       {!workspaceRoot && (
         <Button variant="outline" size="sm" onClick={openFolder}>
-          <FolderOpen className="mr-2 h-4 w-4" />
           Open Folder
         </Button>
       )}

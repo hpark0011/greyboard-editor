@@ -4,7 +4,7 @@ import {
   FileTreeProvider,
   FolderPicker,
 } from "@greyboard/file-explorer";
-import { Icon } from "@greyboard/ui/components/icon";
+import { FolderFillBadgePlusIcon } from "@feel-good/icons";
 import { IconButton } from "@greyboard/ui/components/icon-button";
 import { cn } from "@greyboard/ui/lib/utils";
 import { useMemo } from "react";
@@ -93,11 +93,12 @@ export function ExplorerPanel() {
         <IconButton
           tooltip="Open Folder"
           onClick={openFolder}
-          size="icon-xs"
+          size="icon-sm"
         >
-          <Icon name="PlusIcon" />
+          <FolderFillBadgePlusIcon className="size-4.5" />
         </IconButton>
       </ExplorerPanelHeader>
+
       {workspaceRoot
         ? (
           <FileTreeProvider value={actions}>

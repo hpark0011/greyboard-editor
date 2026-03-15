@@ -63,6 +63,8 @@ export { EyesIcon } from "./components/eyes";
 export { EyesInverseIcon } from "./components/eyes-inverse";
 export { FaceSmilingInverseIcon } from "./components/face-smiling-inverse";
 export { FiveCircleFillIcon } from "./components/five-circle-fill";
+export { FolderBadgePlusIcon } from "./components/folder-badge-plus";
+export { FolderFillBadgePlusIcon } from "./components/folder-fill-badge-plus";
 export { FolderFillIcon } from "./components/folder-fill";
 export { FourCircleFillIcon } from "./components/four-circle-fill";
 export { GearIcon } from "./components/gear";

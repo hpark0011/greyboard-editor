@@ -3,9 +3,9 @@ import { useThemeEffect } from "../../hooks/use-theme-effect";
 import { useShallow } from "zustand/react/shallow";
 import {
   ResizableHandle,
-  ResizableLayout,
   ResizablePanel,
-} from "@greyboard/ui/components/resizable-layout";
+  ResizablePanelGroup,
+} from "@greyboard/ui/primitives/resizable";
 import { TooltipProvider } from "@greyboard/ui/primitives/tooltip";
 import { MarkdownEditor } from "@greyboard/editor";
 import { MessageSquare } from "lucide-react";
@@ -56,7 +56,7 @@ export function AppLayout() {
 
         {/* Main content */}
         <div className="flex-1 overflow-hidden">
-          <ResizableLayout>
+          <ResizablePanelGroup direction="horizontal">
             {/* Left sidebar */}
             {leftSidebarVisible && (
               <>
@@ -134,7 +134,7 @@ export function AppLayout() {
                 </ResizablePanel>
               </>
             )}
-          </ResizableLayout>
+          </ResizablePanelGroup>
         </div>
       </div>
     </TooltipProvider>

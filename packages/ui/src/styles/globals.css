@@ -30,6 +30,7 @@
 @import "./card.css";
 @import "./toast.css";
 @import "./chat-input.css";
+@import "./resizable";
 
 /* custom variant */
 @custom-variant dark (&:is(.dark *));
@@ -63,7 +64,6 @@
   --border: var(--gray-6);
   --border-subtle: var(--gray-5);
   --ring: var(--gray-7);
-  --resizable-handle-hover: var(--border-subtle);
 
   /* Icon */
   --icon: var(--gray-8);
@@ -98,7 +98,6 @@
   --border: var(--gray-4);
   --border-subtle: var(--gray-3);
   --ring: var(--gray-3);
-  --resizable-handle-hover: var(--border-subtle);
 
   /* Icon */
   --icon: var(--gray-8);
@@ -133,7 +132,6 @@
   --color-border: var(--border);
   --color-border-subtle: var(--border-subtle);
   --color-ring: var(--ring);
-  --color-resizable-handle-hover: var(--resizable-handle-hover);
 
   /* Icon */
   --color-icon: var(--icon);
